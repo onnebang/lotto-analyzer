@@ -809,6 +809,9 @@
       <button class="tab-btn active" onclick="switchTab('pinball')">
         <span style="font-size:1.15rem;">🕹️</span> 45구 네온 핀볼 머신 <span class="tab-badge" style="background:linear-gradient(135deg, #06b6d4, #10b981);">NEW</span>
       </button>
+      <button class="tab-btn" onclick="switchTab('derby')">
+        <span style="font-size:1.15rem;">🏇</span> 45구 로또 그랑프리 경마 <span class="tab-badge" style="background:linear-gradient(135deg, #f59e0b, #ef4444);">HOT</span>
+      </button>
       <button class="tab-btn" onclick="switchTab('battle')">
         <span style="font-size:1.15rem;">🥊</span> 45구 배틀로얄 서바이벌 <span class="tab-badge">인기</span>
       </button>
@@ -907,6 +910,98 @@
               </button>
               <button class="btn btn-outline" style="background:#fff; color:#111; font-weight:700;" onclick="openPinballReceiptModal()">
                 <i class="fa-solid fa-receipt"></i> 핀볼 잭팟 부적 영수증
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- TAB: 45구 로또 그랑프리 경마 (NEW DERBY RACING) -->
+    <!-- ============================================== -->
+    <div id="tab-derby" class="tab-content">
+      <div class="battle-layout">
+        <!-- Canvas Arena Box -->
+        <div class="arena-box" style="border-color: rgba(245, 158, 11, 0.4); box-shadow: 0 0 30px rgba(245, 158, 11, 0.2);">
+          <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-bottom:0.6rem; padding:0 0.5rem;">
+            <div style="font-size:0.95rem; font-weight:800; color:#f8fafc; display:flex; align-items:center; gap:0.4rem;">
+              <span style="color:#f59e0b;">● DERBY</span> 45구 로또 그랑프리 대상경주 (1,200m)
+            </div>
+            <div style="font-size:0.85rem; color:#fbc02d;" id="derbyDistanceLabel">
+              남은 거리: <span id="derbyDistance" style="font-weight:800; font-family:'Outfit'; font-size:1.1rem; color:#fff;">1,200m</span>
+            </div>
+          </div>
+          <!-- Live Announcer Ticker -->
+          <div style="background:rgba(15, 23, 42, 0.85); border:1px solid rgba(245, 158, 11, 0.3); border-radius:8px; padding:0.45rem 0.8rem; font-size:0.82rem; color:#fef08a; margin-bottom:0.6rem; display:flex; align-items:center; gap:0.5rem;" id="derbyAnnouncerBar">
+            <i class="fa-solid fa-bullhorn" style="color:#f59e0b;"></i> <span id="derbyCommentaryText">45마리의 번호마들이 출발 게이트에 도열했습니다! '게이트 오픈!' 버튼을 누르면 일제히 질주합니다!</span>
+          </div>
+          <canvas id="derbyCanvas" width="500" height="580" style="width:500px; height:580px; max-width:100%; border-radius:16px; background:#142918; border:2px solid rgba(245, 158, 11, 0.3); display:block;"></canvas>
+        </div>
+
+        <!-- Sidebar / Controls -->
+        <div class="battle-sidebar">
+          <div class="battle-controls-card">
+            <h3 style="font-size:1.1rem; font-weight:800; color:#fff; margin-bottom:0.6rem; display:flex; align-items:center; gap:0.5rem;">
+              <i class="fa-solid fa-flag-checkered" style="color:#f59e0b;"></i> 경마 레이스 컨트롤러
+            </h3>
+            <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:1rem; line-height:1.5;">
+              45마리의 번호마들이 치열한 몸싸움과 라스트 스퍼트를 뚫고, <strong>결승선(FINISH LINE)을 1착~6착으로 가장 먼저 통과한 6두</strong>가 이번 주 1등 추천 번호가 됩니다!
+            </p>
+
+            <!-- Race Action Buttons -->
+            <div style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">
+              <button class="btn btn-primary" style="flex:1; background:linear-gradient(135deg, #f59e0b, #ef4444); border-color:#ef4444;" id="btnStartDerby" onclick="startDerbyRace()">
+                <i class="fa-solid fa-play"></i> 게이트 오픈! (출발)
+              </button>
+              <button class="btn btn-outline" onclick="toggleDerbySpeed()" id="btnDerbySpeed">
+                <i class="fa-solid fa-forward"></i> 1x 보통
+              </button>
+              <button class="btn btn-outline" onclick="resetDerbyRace()">
+                <i class="fa-solid fa-rotate-right"></i> 다시 하기
+              </button>
+              <button class="btn btn-outline" onclick="skipDerbyRace()">
+                <i class="fa-solid fa-forward-fast"></i> 즉시 판정 (스킵)
+              </button>
+            </div>
+
+            <!-- Live Top 6 / Finish Order -->
+            <div style="background:rgba(255,255,255,0.03); padding:0.9rem; border-radius:12px; margin-bottom:0.8rem; border:1px solid rgba(255,255,255,0.06);">
+              <div style="font-size:0.84rem; font-weight:700; color:#cbd5e1; margin-bottom:0.6rem; display:flex; justify-content:space-between;">
+                <span>🏁 1착 ~ 6착 골든 마권 현황:</span>
+                <span style="color:#fbc02d; font-family:'Outfit';" id="derbyStatusText">0 / 6 통과</span>
+              </div>
+              <div style="display:flex; gap:0.4rem; justify-content:space-between;" id="derbyBallsPreview">
+                <div class="slot-preview-box" id="derby-spb-0">1착 ?</div>
+                <div class="slot-preview-box" id="derby-spb-1">2착 ?</div>
+                <div class="slot-preview-box" id="derby-spb-2">3착 ?</div>
+                <div class="slot-preview-box" id="derby-spb-3">4착 ?</div>
+                <div class="slot-preview-box" id="derby-spb-4">5착 ?</div>
+                <div class="slot-preview-box" id="derby-spb-5">6착 ?</div>
+              </div>
+            </div>
+
+            <!-- Funny Jockeys Commentary -->
+            <div style="background:rgba(15,23,42,0.7); border:1px solid var(--border-color); border-radius:12px; padding:0.85rem; font-size:0.82rem; color:var(--text-muted); line-height:1.5;" id="derbyFunCommentary">
+              💡 <strong>마방 꿀팁:</strong> 경기 후반 직선주로(결승 300m 전)에서 숨어있던 추입마들의 '라스트 부스터'가 폭발하며 순위가 뒤집힙니다!
+            </div>
+          </div>
+
+          <!-- Derby Winner Banner -->
+          <div class="survivors-banner" id="derbyWinnerBanner" style="display:none; border-color:#f59e0b; box-shadow:0 0 25px rgba(245,158,11,0.4); background:linear-gradient(135deg, rgba(245,158,11,0.18), rgba(239,68,68,0.2));">
+            <h3 style="font-size:1.25rem; font-weight:800; color:#fbc02d; margin-bottom:0.3rem;">
+              🏆 그랑프리 제패! 1~6착 결승선 통과 완료!
+            </h3>
+            <p style="font-size:0.82rem; color:#f8fafc; margin-bottom:0.8rem;">
+              1,200m 치열한 진흙탕 승부를 뚫고 결승선을 가른 전설의 6두!
+            </p>
+            <div class="balls-row" id="derbyBallsRow" style="justify-content:center; margin-bottom:1rem;"></div>
+            <div style="display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;">
+              <button class="btn btn-primary" style="background:#f59e0b; border-color:#f59e0b; color:#111; font-weight:800;" onclick="copyDerbyNumbers()">
+                <i class="fa-solid fa-copy"></i> 카톡 마권 복사
+              </button>
+              <button class="btn btn-outline" style="background:#fff; color:#111; font-weight:700;" onclick="openDerbyReceiptModal()">
+                <i class="fa-solid fa-receipt"></i> 1등 적중 마권 영수증
               </button>
             </div>
           </div>
@@ -1251,6 +1346,45 @@
   </main>
 
   
+  <!-- Derby Lucky Receipt Modal -->
+  <div class="modal-overlay" id="derbyReceiptModal" onclick="closeDerbyReceiptModal(event)">
+    <div class="receipt-paper" onclick="event.stopPropagation()">
+      <div style="text-align:center; font-weight:800; font-size:1.15rem; border-bottom:2px dashed #000; padding-bottom:0.6rem; margin-bottom:0.8rem;">
+        🏇 45구 로또 그랑프리 1등 적중 마권 🏇
+      </div>
+      <div style="font-size:0.78rem; line-height:1.5; margin-bottom:0.8rem;">
+        <div>[발행] 과천 로또 경마 레이싱 총본산</div>
+        <div>[경주] 제 1248회 로또 그랑프리 대상경주 (1,200m)</div>
+        <div>[일자] <span id="derbyReceiptDate">2026.10.29</span></div>
+        <div>[배당률] <span id="derbyReceiptOdds" style="color:#d97706; font-weight:700;">99,999.9배 (적중 잭팟!)</span></div>
+      </div>
+      <div style="border-top:1px dashed #444; border-bottom:1px dashed #444; padding:0.8rem 0; margin-bottom:0.8rem; text-align:center;">
+        <div style="font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">[1착 ~ 6착 골든 6두]</div>
+        <div style="font-size:1.4rem; font-weight:800; letter-spacing:2px; color:#d97706;" id="derbyReceiptNumbers">
+          05 12 24 31 38 44
+        </div>
+      </div>
+      <div style="font-size:0.75rem; line-height:1.6; margin-bottom:1rem;">
+        <div style="font-weight:700; margin-bottom:0.2rem;">[※ 로또 마권 당첨 시 필수 수칙]</div>
+        <div>1. 마권 맞았다고 경마장 잔디밭에서 큰절하지 말 것 (경비 아저씨 출동)</div>
+        <div>2. 1등 당첨되면 과천역 앞에서 전광판 보며 소고기 파티 열기</div>
+        <div>3. 직장 상사에게 '마주(馬主)가 되어서 출근 못합니다' 쿨하게 통보하기</div>
+        <div>4. 번호마처럼 힘차게 이번 주 로또 판매점으로 달려가기</div>
+      </div>
+      <div style="text-align:center; font-size:0.8rem; font-weight:700; border-top:2px dashed #000; padding-top:0.6rem;">
+        경마의 신 曰: "직선 주로에서 끝까지 포기하지 않는 자가 1등을 거머쥔다."
+      </div>
+      <div style="margin-top:1.2rem; display:flex; gap:0.5rem;">
+        <button class="btn btn-primary" style="flex:1; justify-content:center; font-size:0.8rem; background:#f59e0b; border-color:#f59e0b; color:#111; font-weight:800;" onclick="copyDerbyReceiptText()">
+          마권 텍스트 복사
+        </button>
+        <button class="btn btn-outline" style="color:#000; border-color:#888; font-size:0.8rem;" onclick="closeDerbyReceiptModal()">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Pinball Lucky Receipt Modal -->
   <div class="modal-overlay" id="pinballReceiptModal" onclick="closePinballReceiptModal(event)">
     <div class="receipt-paper" onclick="event.stopPropagation()">
@@ -1455,6 +1589,47 @@
             o.start(t);
             o.stop(t + 0.4);
           });
+        } else if (type === 'bugle') {
+          // 경마 출발 트럼펫 팡파레 (Grand Prix Call to the Post)
+          const bugleNotes = [261.63, 329.63, 392.00, 523.25, 392.00, 523.25, 659.25, 523.25];
+          bugleNotes.forEach((f, idx) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.type = 'sawtooth';
+            o.frequency.value = f;
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            const t = now + idx * 0.12;
+            g.gain.setValueAtTime(0.15, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+            o.start(t);
+            o.stop(t + 0.28);
+          });
+        } else if (type === 'whip') {
+          // 채찍 스퍼트 소리
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.type = 'sine';
+          o.frequency.setValueAtTime(1400, now);
+          o.frequency.exponentialRampToValueAtTime(150, now + 0.06);
+          g.gain.setValueAtTime(0.18, now);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          o.start(now);
+          o.stop(now + 0.06);
+        } else if (type === 'gallop') {
+          // 말발굽 달리는 리듬 소리
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.type = 'triangle';
+          o.frequency.setValueAtTime(120, now);
+          g.gain.setValueAtTime(0.06, now);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          o.start(now);
+          o.stop(now + 0.04);
         }
       } catch (e) {}
     }
@@ -1494,6 +1669,10 @@
       } else if (tabId === 'pinball') {
         if (!pinballRunning) {
           drawPinballFrame();
+        }
+      } else if (tabId === 'derby') {
+        if (!derbyRunning) {
+          drawDerbyFrame();
         }
       }
     }
@@ -2324,6 +2503,614 @@ ${numsStr}
 ========================================`;
       navigator.clipboard.writeText(text).then(() => {
         alert("영수증 부적 텍스트가 클립보드에 복사되었습니다!");
+      });
+    }
+
+
+    // =========================================================
+    // 🏇 45구 로또 그랑프리 경마 물리 엔진 & 레이스 루프 (CANVAS 2D)
+    // =========================================================
+    const derbyCvs = document.getElementById('derbyCanvas');
+    const derbyCtx = derbyCvs ? derbyCvs.getContext('2d') : null;
+
+    const DERBY_TOTAL_DIST = 1200; // 1200 meters
+    const DERBY_TRACK_PX = 3600;   // 3600 canvas units to finish
+    let derbyRunning = false;
+    let derbySpeed = 1;
+    let derbyAnimationId = null;
+    let derbyHorses = [];
+    let derbyFinishedHorses = [];
+    let derbyParticles = [];
+    let derbyCameraX = 0;
+    let derbyCommentaryTimer = 0;
+    let lastGallopSound = 0;
+
+    function initDerby() {
+      if (!derbyCvs || !derbyCtx) return;
+      initDerbyHorses();
+      drawDerbyFrame();
+    }
+
+    function initDerbyHorses() {
+      derbyHorses = [];
+      derbyFinishedHorses = [];
+      derbyParticles = [];
+      derbyCameraX = 0;
+      derbyCommentaryTimer = 0;
+
+      const strategies = ['front', 'pace', 'closer']; // 도주마, 선행마, 추입마
+      const laneH = (525 - 55) / 45;
+
+      for (let i = 1; i <= 45; i++) {
+        let col = '#fbc02d';
+        if (i > 10 && i <= 20) col = '#1e88e5';
+        else if (i > 20 && i <= 30) col = '#e53935';
+        else if (i > 30 && i <= 40) col = '#78909c';
+        else if (i > 40) col = '#43a047';
+
+        const strat = strategies[Math.floor(Math.random() * strategies.length)];
+        derbyHorses.push({
+          num: i,
+          laneIndex: i - 1,
+          baseY: 55 + (i - 0.5) * laneH,
+          x: 0,
+          baseSpeed: 3.2 + Math.random() * 0.9,
+          vx: 0,
+          stamina: 80 + Math.random() * 40,
+          strategy: strat,
+          phase: Math.random() * Math.PI * 2,
+          color: col,
+          finished: false,
+          finishRank: 0,
+          inSpurt: false,
+          boostCooldown: 30 + Math.floor(Math.random() * 60)
+        });
+      }
+
+      // Shuffle initial gate assignment so lane 1 doesn't always equal horse 1
+      shuffleArray(derbyHorses);
+      derbyHorses.forEach((h, idx) => {
+        h.laneIndex = idx;
+        h.baseY = 55 + (idx + 0.5) * laneH;
+      });
+
+      // Reset UI elements
+      document.getElementById('derbyDistance').textContent = '1,200m';
+      document.getElementById('derbyStatusText').textContent = '0 / 6 통과';
+      for (let i = 0; i < 6; i++) {
+        const box = document.getElementById(`derby-spb-${i}`);
+        if (box) {
+          box.classList.remove('filled');
+          box.innerHTML = `${i + 1}착 ?`;
+        }
+      }
+      const banner = document.getElementById('derbyWinnerBanner');
+      if (banner) banner.style.display = 'none';
+
+      const commentEl = document.getElementById('derbyCommentaryText');
+      if (commentEl) commentEl.innerHTML = "45마리의 번호마들이 출발 게이트에 도열했습니다! '게이트 오픈!' 버튼을 누르면 일제히 질주합니다!";
+
+      const btnStart = document.getElementById('btnStartDerby');
+      if (btnStart) btnStart.innerHTML = '<i class="fa-solid fa-play"></i> 게이트 오픈! (출발)';
+    }
+
+    function startDerbyRace() {
+      if (derbyFinishedHorses.length >= 6) {
+        resetDerbyRace();
+      }
+      if (derbyRunning) return;
+
+      playSound('bugle');
+      derbyRunning = true;
+      const btnStart = document.getElementById('btnStartDerby');
+      if (btnStart) btnStart.innerHTML = '<i class="fa-solid fa-bolt"></i> 경주 진행 중!';
+
+      const commentEl = document.getElementById('derbyCommentaryText');
+      if (commentEl) commentEl.innerHTML = "🎺 <strong>탕!</strong> 게이트 활짝 열렸습니다! 45마리의 번호마들 일제히 출발!";
+
+      derbyAnimationId = requestAnimationFrame(derbyLoop);
+    }
+
+    function toggleDerbySpeed() {
+      if (derbySpeed === 1) {
+        derbySpeed = 2;
+        document.getElementById('btnDerbySpeed').innerHTML = '<i class="fa-solid fa-forward-fast"></i> 2x 배속';
+      } else if (derbySpeed === 2) {
+        derbySpeed = 4;
+        document.getElementById('btnDerbySpeed').innerHTML = '<i class="fa-solid fa-bolt"></i> 4x 초고속';
+      } else {
+        derbySpeed = 1;
+        document.getElementById('btnDerbySpeed').innerHTML = '<i class="fa-solid fa-forward"></i> 1x 보통';
+      }
+    }
+
+    function resetDerbyRace() {
+      derbyRunning = false;
+      if (derbyAnimationId) cancelAnimationFrame(derbyAnimationId);
+      initDerbyHorses();
+      drawDerbyFrame();
+    }
+
+    function skipDerbyRace() {
+      if (derbyFinishedHorses.length >= 6) return;
+
+      // Finish remaining slots from current leaders or remaining horses
+      const finishedNums = new Set(derbyFinishedHorses.map(h => h.num));
+      const pool = derbyHorses.filter(h => !finishedNums.has(h.num));
+      // Sort by progress x descending with slight random jitter
+      pool.sort((a, b) => (b.x + (Math.random() - 0.5) * 200) - (a.x + (Math.random() - 0.5) * 200));
+
+      while (derbyFinishedHorses.length < 6 && pool.length > 0) {
+        const h = pool.shift();
+        h.finished = true;
+        h.x = DERBY_TRACK_PX + 20;
+        h.finishRank = derbyFinishedHorses.length + 1;
+        derbyFinishedHorses.push(h);
+        updateDerbySlotUI(h.finishRank - 1, h);
+      }
+
+      derbyCameraX = DERBY_TRACK_PX - 200;
+      triggerDerbyFinish();
+      drawDerbyFrame();
+    }
+
+    function updateDerbyPhysics() {
+      let leadX = 0;
+
+      for (let h of derbyHorses) {
+        if (h.finished) continue;
+
+        // Gallop animation
+        h.phase += 0.35 * derbySpeed;
+
+        // Dist remaining in meters (0 to 1200)
+        const progressM = (h.x / DERBY_TRACK_PX) * DERBY_TOTAL_DIST;
+        const remainM = Math.max(0, DERBY_TOTAL_DIST - progressM);
+
+        // Strategy pacing
+        let stratMultiplier = 1.0;
+        if (h.strategy === 'front') {
+          // Front runner fast early, tires slightly late
+          stratMultiplier = remainM > 400 ? 1.12 : 0.95;
+        } else if (h.strategy === 'closer') {
+          // Closer saves stamina, explosive burst in final 350m
+          stratMultiplier = remainM > 350 ? 0.92 : 1.25;
+          if (remainM <= 350 && !h.inSpurt) {
+            h.inSpurt = true;
+            playSound('whip');
+            spawnDerbyDust(h.x, h.baseY, '#f59e0b', 8);
+          }
+        } else {
+          // Pace balances evenly
+          stratMultiplier = 1.0 + (Math.random() - 0.5) * 0.15;
+        }
+
+        // Random turbo boost spurt
+        if (h.boostCooldown > 0) {
+          h.boostCooldown--;
+        } else if (Math.random() < 0.015) {
+          h.boostCooldown = 90;
+          h.vx += 1.8;
+          spawnDerbyDust(h.x, h.baseY, '#ef4444', 6);
+        }
+
+        // Apply speed
+        h.vx = h.baseSpeed * stratMultiplier + (Math.random() - 0.48) * 0.4;
+        h.x += h.vx * derbySpeed;
+
+        if (h.x > leadX) leadX = h.x;
+
+        // Hoof dust
+        if (Math.random() < 0.25) {
+          spawnDerbyDust(h.x - 8, h.baseY + 4, 'rgba(180, 150, 100, 0.6)', 1);
+        }
+
+        // Finish line check
+        if (h.x >= DERBY_TRACK_PX) {
+          h.finished = true;
+          derbyFinishedHorses.push(h);
+          h.finishRank = derbyFinishedHorses.length;
+
+          if (h.finishRank <= 6) {
+            playSound('slot');
+            updateDerbySlotUI(h.finishRank - 1, h);
+            spawnDerbyDust(h.x, h.baseY, '#fbc02d', 14);
+
+            if (derbyFinishedHorses.length === 6) {
+              triggerDerbyFinish();
+            }
+          }
+        }
+      }
+
+      // Smooth camera track following lead pack
+      const targetCamX = Math.max(0, leadX - 220);
+      derbyCameraX += (targetCamX - derbyCameraX) * 0.12;
+
+      // Gallop sound rhythm
+      const now = performance.now();
+      if (now - lastGallopSound > 160 / derbySpeed) {
+        lastGallopSound = now;
+        if (Math.random() < 0.6) playSound('gallop');
+      }
+
+      // Live remaining distance on leader
+      const leadRemainM = Math.max(0, Math.round(DERBY_TOTAL_DIST - (leadX / DERBY_TRACK_PX) * DERBY_TOTAL_DIST));
+      const distEl = document.getElementById('derbyDistance');
+      if (distEl) distEl.textContent = `${leadRemainM}m`;
+
+      // Live Announcer Commentary Updates
+      derbyCommentaryTimer += derbySpeed;
+      if (derbyCommentaryTimer > 90) {
+        derbyCommentaryTimer = 0;
+        updateDerbyCommentary(leadRemainM);
+      }
+
+      // Particles
+      for (let p of derbyParticles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.04;
+      }
+      derbyParticles = derbyParticles.filter(p => p.life > 0);
+    }
+
+    function updateDerbySlotUI(rankIdx, horse) {
+      document.getElementById('derbyStatusText').textContent = `${rankIdx + 1} / 6 통과!`;
+      const box = document.getElementById(`derby-spb-${rankIdx}`);
+      if (box) {
+        box.classList.add('filled');
+        box.innerHTML = `<div class="ball xs ${getBallClass(horse.num)}" style="margin:0;">${horse.num}</div>`;
+      }
+    }
+
+    function updateDerbyCommentary(remainM) {
+      const commentEl = document.getElementById('derbyCommentaryText');
+      if (!commentEl) return;
+
+      // Get current leader horse
+      const living = [...derbyHorses].sort((a, b) => b.x - a.x);
+      const leader = living[0];
+      const second = living[1];
+
+      if (remainM > 900) {
+        commentEl.innerHTML = `🏇 <strong>[공 ${leader.num}]</strong>번마가 초반 페이스를 주도하며 선두로 치고 나옵니다!`;
+      } else if (remainM > 600) {
+        commentEl.innerHTML = `⚡ <strong>[공 ${leader.num}]</strong>번마와 <strong>[공 ${second.num}]</strong>번마 치열한 1위 쟁탈전!`;
+      } else if (remainM > 300) {
+        commentEl.innerHTML = `🔥 외곽에서 후미 그룹이 무서운 속도로 좁혀옵니다! 장내 환호성 폭발!`;
+      } else if (remainM > 100) {
+        commentEl.innerHTML = `📢 <strong>라스트 직선주로!</strong> 모든 번호마들 채찍을 가하며 결승선을 향해 돌진합니다!`;
+      } else if (remainM > 0) {
+        commentEl.innerHTML = `🏁 <strong>결승선 바로 앞!</strong> 코차 승부! 과연 영광의 6두는 누구인가!`;
+      }
+    }
+
+    function triggerDerbyFinish() {
+      derbyRunning = false;
+      if (derbyAnimationId) cancelAnimationFrame(derbyAnimationId);
+
+      playSound('jackpot');
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 160, spread: 85, origin: { y: 0.6 } });
+      }
+
+      // Collect 6 winning horses & sort numbers ascending
+      const top6 = derbyFinishedHorses.slice(0, 6);
+      const sortedNums = top6.map(h => h.num).sort((a, b) => a - b);
+
+      // Show Winner Banner
+      const banner = document.getElementById('derbyWinnerBanner');
+      if (banner) banner.style.display = 'block';
+
+      const row = document.getElementById('derbyBallsRow');
+      if (row) {
+        row.innerHTML = '';
+        sortedNums.forEach(n => {
+          row.appendChild(createBallElement(n, 'lg'));
+        });
+      }
+
+      // Fill Receipt Modal
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
+      const recDate = document.getElementById('derbyReceiptDate');
+      if (recDate) recDate.textContent = dateStr;
+
+      const recNums = document.getElementById('derbyReceiptNumbers');
+      if (recNums) recNums.textContent = sortedNums.map(n => String(n).padStart(2, '0')).join('  ');
+
+      const commentEl = document.getElementById('derbyCommentaryText');
+      if (commentEl) {
+        commentEl.innerHTML = `🏆 <strong>골인 완료!</strong> 1착~6착 입상 6두: <span style="color:#fbc02d; font-weight:800;">${top6.map(h=>h.num).join(', ')}</span> (추천 조합: ${sortedNums.join(', ')})`;
+      }
+
+      const statusEl = document.getElementById('derbyStatusText');
+      if (statusEl) statusEl.textContent = '6 / 6 통과 완료! 🎉';
+
+      const btnStart = document.getElementById('btnStartDerby');
+      if (btnStart) btnStart.innerHTML = '<i class="fa-solid fa-trophy"></i> 우승 확정! 다시 하기';
+    }
+
+    function drawDerbyFrame() {
+      if (!derbyCtx) return;
+      const ctx = derbyCtx;
+      const w = derbyCvs.width;
+      const h = derbyCvs.height;
+
+      // 1. Lush Green Turf Track Background
+      ctx.fillStyle = '#1b4322';
+      ctx.fillRect(0, 0, w, h);
+
+      // Alternating turf mow strips
+      ctx.fillStyle = '#163a1c';
+      for (let y = 50; y < 535; y += 22) {
+        ctx.fillRect(0, y, w, 11);
+      }
+
+      // 2. Dirt Track rails (Top and bottom white railing)
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+      // Top Rail
+      ctx.fillRect(0, 48, w, 4);
+      // Bottom Rail
+      ctx.fillRect(0, 535, w, 4);
+
+      // Rail vertical posts
+      for (let x = 0; x < w; x += 35) {
+        ctx.fillRect(x, 44, 3, 10);
+        ctx.fillRect(x, 533, 3, 10);
+      }
+
+      // 3. Distance Markers & Checkered Finish Line
+      ctx.save();
+      const distMarkers = [
+        { dist: 0, label: 'START' },
+        { dist: 600, label: '1,000m' },
+        { dist: 1200, label: '800m' },
+        { dist: 1800, label: '600m' },
+        { dist: 2400, label: '400m' },
+        { dist: 3000, label: '200m' },
+        { dist: 3300, label: '100m' },
+        { dist: DERBY_TRACK_PX, label: 'FINISH 🏁' }
+      ];
+
+      for (let m of distMarkers) {
+        const sx = m.dist - derbyCameraX + 160;
+        if (sx >= -50 && sx <= w + 50) {
+          if (m.dist === DERBY_TRACK_PX) {
+            // Checkered Finish line banner
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(sx - 3, 48, 8, 490);
+            ctx.fillStyle = '#000';
+            for (let cy = 48; cy < 535; cy += 16) {
+              ctx.fillRect(sx - 3, cy, 4, 8);
+              ctx.fillRect(sx + 1, cy + 8, 4, 8);
+            }
+            // Finish Flag Header
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = 'bold 13px Outfit, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('FINISH LINE 🏁', sx, 40);
+          } else {
+            // Distance marker pole
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(sx, 50);
+            ctx.lineTo(sx, 535);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = '#fef08a';
+            ctx.font = 'bold 10px Outfit, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(m.label, sx, 42);
+          }
+        }
+      }
+      ctx.restore();
+
+      // 4. Draw Particles (Hoof dust / Turbo flames)
+      for (let p of derbyParticles) {
+        ctx.save();
+        ctx.beginPath();
+        const sx = p.x - derbyCameraX + 160;
+        ctx.arc(sx, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.life;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // 5. Draw 45 Horses & Lotto Balls
+      // Sort horses by Y so lower horses naturally overlap upper horses
+      const drawOrder = [...derbyHorses].sort((a, b) => a.baseY - b.baseY);
+
+      for (let h of drawOrder) {
+        const sx = h.x - derbyCameraX + 160;
+        const bob = Math.sin(h.phase) * 2;
+        const sy = h.baseY + bob;
+
+        ctx.save();
+        // Galloping legs silhouette under the ball
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.lineWidth = 1.5;
+        const legSwing = Math.cos(h.phase) * 3;
+        ctx.beginPath();
+        ctx.moveTo(sx - 3, sy + 7);
+        ctx.lineTo(sx - 5 - legSwing, sy + 13);
+        ctx.moveTo(sx + 3, sy + 7);
+        ctx.lineTo(sx + 5 + legSwing, sy + 13);
+        ctx.stroke();
+
+        // Turbo flame streak
+        if (h.inSpurt) {
+          ctx.beginPath();
+          ctx.moveTo(sx - 9, sy);
+          ctx.lineTo(sx - 18, sy + (Math.random() - 0.5) * 4);
+          ctx.strokeStyle = '#f59e0b';
+          ctx.lineWidth = 3;
+          ctx.stroke();
+        }
+
+        // Lotto Ball Body
+        ctx.beginPath();
+        ctx.arc(sx, sy, 8.5, 0, Math.PI * 2);
+        ctx.fillStyle = h.color;
+        ctx.shadowColor = h.finished ? '#fbc02d' : 'rgba(0,0,0,0.5)';
+        ctx.shadowBlur = h.finished ? 10 : 4;
+        ctx.fill();
+
+        // 3D Specular Highlight
+        ctx.beginPath();
+        ctx.arc(sx - 2.5, sy - 2.5, 3, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.fill();
+
+        // Jockey Cap Visor
+        ctx.beginPath();
+        ctx.arc(sx + 1, sy - 8, 4, 0, Math.PI);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+
+        // Ball Number
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 8px Outfit, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.shadowColor = '#000';
+        ctx.shadowBlur = 2;
+        ctx.fillText(h.num, sx, sy);
+
+        // Finish Rank Badge if finished
+        if (h.finished && h.finishRank <= 6) {
+          ctx.fillStyle = '#fbc02d';
+          ctx.font = 'bold 8px Outfit, sans-serif';
+          ctx.fillText(`★${h.finishRank}`, sx, sy - 12);
+        }
+
+        ctx.restore();
+      }
+
+      // 6. Mini-map Radar Bar at Top (y = 8 to 22)
+      ctx.save();
+      const mmX = 35;
+      const mmY = 10;
+      const mmW = w - 70;
+      const mmH = 12;
+
+      // Minimap background
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+      ctx.fillRect(mmX, mmY, mmW, mmH);
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(mmX, mmY, mmW, mmH);
+
+      // Gate & Finish Flag on minimap
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '7px sans-serif';
+      ctx.fillText('GATE', mmX + 2, mmY + 9);
+      ctx.fillText('GOAL🏁', mmX + mmW - 28, mmY + 9);
+
+      // Horse blips on minimap
+      for (let h of derbyHorses) {
+        const ratio = Math.min(1, Math.max(0, h.x / DERBY_TRACK_PX));
+        const bx = mmX + ratio * (mmW - 6);
+        ctx.beginPath();
+        ctx.arc(bx + 3, mmY + mmH / 2, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = h.color;
+        ctx.fill();
+      }
+
+      // Camera viewport indicator on minimap
+      const camRatio = Math.min(1, Math.max(0, derbyCameraX / DERBY_TRACK_PX));
+      const camW = (w / DERBY_TRACK_PX) * mmW;
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1.2;
+      ctx.strokeRect(mmX + camRatio * mmW, mmY, Math.max(12, camW), mmH);
+      ctx.restore();
+    }
+
+    function spawnDerbyDust(x, y, color, count) {
+      for (let i = 0; i < count; i++) {
+        const ang = Math.PI + (Math.random() - 0.5) * 0.8;
+        const spd = 0.8 + Math.random() * 2;
+        derbyParticles.push({
+          x, y,
+          vx: Math.cos(ang) * spd,
+          vy: (Math.random() - 0.5) * 1.2,
+          color,
+          r: 1.5 + Math.random() * 2,
+          life: 1.0
+        });
+      }
+    }
+
+    function derbyLoop() {
+      if (!derbyRunning) return;
+      for (let step = 0; step < derbySpeed; step++) {
+        updateDerbyPhysics();
+      }
+      drawDerbyFrame();
+
+      if (derbyFinishedHorses.length < 6) {
+        derbyAnimationId = requestAnimationFrame(derbyLoop);
+      }
+    }
+
+    function copyDerbyNumbers() {
+      if (derbyFinishedHorses.length < 6) {
+        alert("아직 6두의 결승선 통과가 완료되지 않았습니다!");
+        return;
+      }
+      const top6 = derbyFinishedHorses.slice(0, 6).map(h => h.num).sort((a, b) => a - b);
+      const sStr = top6.map(n => String(n).padStart(2, '0')).join(', ');
+      const text = `🏇 [로또 6/45 그랑프리 경마 1등 적중 마권]
+우승마 6두: ${sStr}
+(1,200m 치열한 진흙탕 승부를 뚫고 결승선을 가른 전설의 번호!)
+https://onnebang.github.io/lotto-analyzer/`;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("카카오톡 공유용 마권 번호가 복사되었습니다!");
+      });
+    }
+
+    function openDerbyReceiptModal() {
+      const modal = document.getElementById('derbyReceiptModal');
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeDerbyReceiptModal(e) {
+      const modal = document.getElementById('derbyReceiptModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function copyDerbyReceiptText() {
+      if (derbyFinishedHorses.length < 6) return;
+      const dateStr = document.getElementById('derbyReceiptDate').textContent;
+      const top6 = derbyFinishedHorses.slice(0, 6).map(h => h.num).sort((a, b) => a - b);
+      const numsStr = top6.map(n => String(n).padStart(2, '0')).join('  ');
+      const text = `========================================
+🏇 45구 로또 그랑프리 1등 적중 마권 🏇
+========================================
+[발행] 과천 로또 경마 레이싱 총본산
+[경주] 제 1248회 로또 그랑프리 대상경주 (1,200m)
+[일자] ${dateStr}
+[배당률] 99,999.9배 (적중 잭팟!)
+----------------------------------------
+[1착 ~ 6착 골든 6두]
+${numsStr}
+----------------------------------------
+[※ 로또 마권 당첨 시 필수 수칙]
+1. 마권 맞았다고 경마장 잔디밭에서 큰절하지 말 것 (경비 아저씨 출동)
+2. 1등 당첨되면 과천역 앞에서 전광판 보며 소고기 파티 열기
+3. 직장 상사에게 '마주(馬主)가 되어서 출근 못합니다' 쿨하게 통보하기
+4. 번호마처럼 힘차게 이번 주 로또 판매점으로 달려가기
+----------------------------------------
+경마의 신 曰: "직선 주로에서 끝까지 포기하지 않는 자가 1등을 거머쥔다."
+========================================`;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("마권 영수증 텍스트가 클립보드에 복사되었습니다!");
       });
     }
 
@@ -3542,6 +4329,7 @@ https://onnebang.github.io/lotto-analyzer/`;
       initCustomPad();
       initBacktestPad();
       initPinball();
+      initDerby();
       initBattleBalls();
       generateNumbers();
     });
