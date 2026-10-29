@@ -431,6 +431,14 @@ pinball_engine_js = """
       }
     }
 
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
     function initPinballBalls() {
       pinballBalls = [];
       for (let i = 1; i <= 45; i++) {
@@ -452,14 +460,16 @@ pinball_engine_js = """
           slotIndex: -1
         });
       }
+      // 1~45번 순서 편향 방지: 공 목록을 무작위로 셔플
+      shuffleArray(pinballBalls);
     }
 
     function dropBall(b) {
       b.state = 'active';
-      b.x = 220 + Math.random() * 60;
+      b.x = 200 + Math.random() * 100;
       b.y = 20;
-      b.vx = (Math.random() - 0.5) * 3;
-      b.vy = 2.5 + Math.random() * 2;
+      b.vx = (Math.random() - 0.5) * 4.2;
+      b.vy = 2.2 + Math.random() * 2.5;
       spawnPinballParticles(b.x, b.y, '#38bdf8', 4);
     }
 
@@ -467,7 +477,8 @@ pinball_engine_js = """
       if (capturedSlotsCount >= 6) {
         resetPinball();
       }
-      const waitingBalls = pinballBalls.filter(b => b.state === 'idle');
+      // 대기 중인 공들을 매번 무작위 셔플하여 투하 순서 완전 랜덤화
+      const waitingBalls = shuffleArray(pinballBalls.filter(b => b.state === 'idle'));
       if (waitingBalls.length === 0) return;
 
       const btnAll = document.getElementById('btnLaunchAll');
@@ -499,7 +510,9 @@ pinball_engine_js = """
       const waitingBalls = pinballBalls.filter(b => b.state === 'idle');
       if (waitingBalls.length === 0) return;
 
-      const b = waitingBalls[0];
+      // 남아있는 공 중 완전 무작위 1구 선택
+      const randIdx = Math.floor(Math.random() * waitingBalls.length);
+      const b = waitingBalls[randIdx];
       dropBall(b);
       startPinballLoop();
     }
