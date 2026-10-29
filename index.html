@@ -3420,6 +3420,21 @@ ${currentPinballReceiptQuote}
       });
     }
 
+function spawnDerbyDust(x, y, color, count) {
+      count = count || 2;
+      for (let i = 0; i < count; i++) {
+        derbyParticles.push({
+          x: x + (Math.random() - 0.5) * 4,
+          y: y + (Math.random() - 0.5) * 4,
+          vx: -(1.5 + Math.random() * 2),
+          vy: (Math.random() - 0.5) * 1.5,
+          r: 2 + Math.random() * 2,
+          color: color || 'rgba(180, 150, 100, 0.6)',
+          life: 1.0
+        });
+      }
+    }
+
     function updateDerbyPhysics() {
       let leadX = 0;
       const livingHorses = derbyHorses.filter(h => !h.finished);
