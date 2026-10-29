@@ -905,26 +905,213 @@
       transform: scale(1.2);
     }
 
+
+    /* ========================================================= */
+    /* 📺 日本 TV 정보 버라이어티 방송 스타일 (JAPANESE TV BROADCAST) */
+    /* ========================================================= */
+    .tv-clock-weather {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.35rem 0.8rem;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1.5px solid rgba(56, 189, 248, 0.4);
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(2, 132, 199, 0.25);
+    }
+    .tv-clock {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 900;
+      color: #0284c7;
+      text-shadow: 
+        -1.5px -1.5px 0 #fff, 1.5px -1.5px 0 #fff, -1.5px 1.5px 0 #fff, 1.5px 1.5px 0 #fff,
+        0 2px 6px rgba(0,0,0,0.6);
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+    .tv-weather {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.72rem;
+      font-weight: 700;
+      line-height: 1.25;
+      color: #cbd5e1;
+    }
+    .tv-weather-city {
+      font-size: 0.68rem;
+      color: #94a3b8;
+      letter-spacing: 0.5px;
+    }
+    .tv-weather-temp {
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    /* Top Corner Title Pill (코너 타이틀 테롭 - 이미지 상단 우측 스타일) */
+    .tv-corner-pill-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.2rem;
+    }
+    .tv-corner-pill {
+      background: #ffffff;
+      border: 2.5px solid #f59e0b;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.4), 0 3px 6px rgba(0,0,0,0.3);
+      border-radius: 999px;
+      padding: 0.25rem 0.9rem;
+      font-size: 0.84rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      letter-spacing: -0.3px;
+    }
+    .tv-corner-sub {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #fef08a;
+      text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+      letter-spacing: -0.2px;
+    }
+    .tv-special-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      font-weight: 800;
+      font-size: 0.68rem;
+      color: #fff;
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      border: 1px solid #fef08a;
+      letter-spacing: 0.5px;
+    }
+
+    /* Japanese Variety Subtitles (다중 외곽선 테롭 타이포그래피) */
+    .telop-red {
+      font-weight: 900;
+      color: #ef4444;
+      text-shadow:
+        -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff,
+        -3.5px 0 0 #fff, 3.5px 0 0 #fff, 0 -3.5px 0 #fff, 0 3.5px 0 #fff,
+        0 3px 6px rgba(0,0,0,0.8);
+    }
+    .telop-green {
+      font-weight: 900;
+      color: #10b981;
+      text-shadow:
+        -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff,
+        -3.5px 0 0 #fff, 3.5px 0 0 #fff, 0 -3.5px 0 #fff, 0 3.5px 0 #fff,
+        0 3px 6px rgba(0,0,0,0.8);
+    }
+
+    /* Floating Reaction Wipe Widget (좌측 하단 와이프 / PIP 리액션 창) */
+    .tv-wipe-widget {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 999;
+      background: rgba(15, 23, 42, 0.92);
+      border: 3px solid #4ade80;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(74, 222, 128, 0.4), 0 8px 25px rgba(0,0,0,0.7);
+      padding: 0.5rem 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      max-width: 320px;
+      backdrop-filter: blur(12px);
+      transition: transform 0.25s ease;
+    }
+    .tv-wipe-widget:hover {
+      transform: scale(1.04);
+    }
+    .tv-wipe-header {
+      position: absolute;
+      top: -10px;
+      left: 12px;
+      background: #4ade80;
+      color: #052e16;
+      font-size: 0.62rem;
+      font-weight: 900;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .tv-wipe-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fef08a, #f59e0b);
+      border: 2px solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+      flex-shrink: 0;
+    }
+    .tv-wipe-content {
+      font-size: 0.76rem;
+      color: #f8fafc;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+    .tv-wipe-bubble {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fef08a;
+    }
+
 </style>
 </head>
 <body>
 
   <!-- Header -->
   <header>
-    <div class="header-inner">
-      <div class="brand">
-        <div class="brand-icon" style="background:linear-gradient(135deg, #f59e0b, #ef4444); box-shadow:0 0 20px rgba(245, 158, 11, 0.5);">
-          <i class="fa-solid fa-tv"></i>
-        </div>
-        <div>
-          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-            <h1>로또 6/45 AI 버라이어티 쇼</h1>
-            <span class="on-air-badge"><span class="on-air-dot"></span> LIVE 生放送</span>
-            <span class="variety-badge">초특급 병맛 예능</span>
+    <div class="header-inner" style="align-items:center;">
+      <!-- Left: TV Clock & Studio Brand -->
+      <div style="display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap;">
+        <div class="tv-clock-weather">
+          <div class="tv-clock" id="tvDigitalClock">09:33</div>
+          <div class="tv-weather">
+            <div class="tv-weather-city">神奈川 / SEOUL</div>
+            <div class="tv-weather-temp">☀️ 21℃ <span style="font-size:0.68rem; color:#94a3b8;">0→0%</span></div>
           </div>
-          <p>역대 전회차 AI 빅데이터 분석 & 45구 아케이드 버라이어티</p>
+        </div>
+
+        <div class="brand">
+          <div class="brand-icon" style="background:linear-gradient(135deg, #0284c7, #6366f1); box-shadow:0 0 20px rgba(2, 132, 199, 0.5);">
+            <i class="fa-solid fa-tv"></i>
+          </div>
+          <div>
+            <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+              <h1>로또 6/45 AI 버라이어티 스튜디오</h1>
+              <span class="on-air-badge"><span class="on-air-dot"></span> LIVE 生放送</span>
+              <span class="tv-special-badge">特別企画 SPECIAL</span>
+            </div>
+            <p>역대 전회차 AI 빅데이터 분석 & 45구 라이브 아케이드</p>
+          </div>
         </div>
       </div>
+
+      <!-- Right: Corner Title Pill & Action Buttons -->
+      <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+        <div class="tv-corner-pill-wrap" style="margin-right:0.5rem;">
+          <div class="tv-corner-pill">
+            <span style="color:#0284c7;">AI 6/45</span>
+            <span style="color:#ef4444;">99초 퀵 예측</span>
+            <span style="color:#d97706;">Show!</span>
+          </div>
+          <div class="tv-corner-sub">
+            이어서 역대급 1등 황금 조합 대공개! ★ WE 로또 뉴스
+          </div>
+        </div>
       <div class="header-actions">
         <button class="btn btn-outline" id="btnSound" onclick="toggleSound()">
           <i class="fa-solid fa-volume-high"></i> 사운드 ON
@@ -1082,7 +1269,7 @@
         <div class="arena-box" style="border-color: rgba(245, 158, 11, 0.5); box-shadow: 0 0 35px rgba(245, 158, 11, 0.25); background: rgba(20, 27, 45, 0.88);">
           <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-bottom:0.5rem; padding:0 0.5rem;">
             <div style="font-size:0.95rem; font-weight:800; color:#f8fafc; display:flex; align-items:center; gap:0.4rem;">
-              <span class="variety-tag">爆笑 DERBY</span> 45구 재팬 월드컵풍 병맛 경마 (1,200m)
+              <span class="variety-tag">爆笑 DERBY</span> 45구 드림 그랑프리 실황 생중계 (1,200m)
             </div>
             <div style="font-size:0.85rem; color:#fbc02d;" id="derbyDistanceLabel">
               남은 거리: <span id="derbyDistance" style="font-weight:800; font-family:'Outfit'; font-size:1.15rem; color:#fef08a; text-shadow:0 0 8px rgba(254,240,138,0.5);">1,200m</span>
@@ -1092,7 +1279,7 @@
           <div class="variety-ticker" id="derbyAnnouncerBar">
             <span class="variety-tag" id="derbyTickerTag">速報</span>
             <span id="derbyCommentaryText" style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-              45마리의 번호마들이 게이트에 도열! 무엇이 튀어나올지 모르는 초특급 병맛 그랑프리 출발 임박!
+              45마리의 번호마들이 게이트에 도열! 무엇이 튀어나올지 모르는 예측불허 드림 그랑프리 출발 임박!
             </span>
           </div>
           <canvas id="derbyCanvas" width="500" height="580" style="width:500px; height:580px; max-width:100%; border-radius:16px; background:#142918; border:2px solid rgba(245, 158, 11, 0.3); display:block;"></canvas>
@@ -1352,7 +1539,7 @@
 
             <!-- Kill Feed -->
             <label class="control-label" style="margin-bottom:0.4rem; display:flex; justify-content:space-between;">
-              <span>⚔️ 실시간 전투 중계 (병맛 로그)</span>
+              <span>⚔️ 실시간 서바이벌 생존 현황 (LIVE 로그)</span>
               <span style="font-size:0.75rem; color:var(--text-muted);">충돌 시 HP 감소</span>
             </label>
             <div class="killfeed-box" id="killFeed">
@@ -1376,7 +1563,7 @@
                 <i class="fa-solid fa-copy"></i> 카톡 공유 복사
               </button>
               <button class="btn btn-outline" style="background:#fff; color:#111; font-weight:700;" onclick="openReceiptModal()">
-                <i class="fa-solid fa-receipt"></i> 병맛 영수증 부적 발급
+                <i class="fa-solid fa-receipt"></i> 1등 대박 기원 행운의 영수증 발급
               </button>
             </div>
           </div>
@@ -3072,7 +3259,7 @@ ${currentPinballReceiptQuote}
 
     // =========================================================
     // 🏇 45구 로또 그랑프리 경마 물리 엔진 & 레이스 루프 (CANVAS 2D)
-    // 爆笑! 일본 재팬월드컵풍 초특급 병맛 기믹 탑재
+    // 🏇 45구 드림 그랑프리 실황 레이스 루프
     // (슈퍼카 난입, 거대화 도핑, 아이스크림 먹방, 바나나 스핀, 로켓 부스터)
     // =========================================================
     const derbyCvs = document.getElementById('derbyCanvas');
@@ -3166,7 +3353,7 @@ ${currentPinballReceiptQuote}
       if (banner) banner.style.display = 'none';
 
       const commentEl = document.getElementById('derbyCommentaryText');
-      if (commentEl) commentEl.innerHTML = "45마리의 번호마들이 게이트에 도열! 무엇이 튀어나올지 모르는 초특급 병맛 그랑프리 출발 임박!";
+      if (commentEl) commentEl.innerHTML = "45마리의 번호마들이 게이트에 도열! 무엇이 튀어나올지 모르는 예측불허 드림 그랑프리 출발 임박!";
       const tagEl = document.getElementById('derbyTickerTag');
       if (tagEl) tagEl.textContent = "待機";
 
@@ -3192,6 +3379,7 @@ ${currentPinballReceiptQuote}
       if (tagEl) tagEl.textContent = "生中継";
 
       spawnDerbyPopText('スタート! (START!)', 'ドドドド!', 120, 280, '#fef08a', 28);
+      if (typeof setTvWipeReaction === 'function') setTvWipeReaction('🏇', '"게이트 오픈!! 45두 일제히 질주 스타트!!"');
 
       derbyAnimationId = requestAnimationFrame(derbyLoop);
     }
@@ -3274,6 +3462,7 @@ ${currentPinballReceiptQuote}
           spawnDerbyPopText('🚗 ブオーン! 슈퍼카 난입!', '비켜라 면허 땄다!!', candidate.x, candidate.baseY - 20, '#ef4444', 24);
           const commentEl = document.getElementById('derbyCommentaryText');
           if (commentEl) commentEl.innerHTML = `🚨 <strong>【긴급속보】 [공 ${candidate.num}]</strong>번마가 면허 취득 기념 스포츠카 타고 굉음 질주?!`;
+          if (typeof setTvWipeReaction === 'function') setTvWipeReaction('🚗', `"경악! [공 ${candidate.num}]번마 스포츠카 타고 굉음 질주?!"`);
         }
       }
 
@@ -3285,6 +3474,7 @@ ${currentPinballReceiptQuote}
         spawnDerbyPopText('🍦 냠냠~ 아이스크림 먹방!', '더워서 좀 쉴게요 (草)', currentLeader.x, currentLeader.baseY - 25, '#38bdf8', 22);
         const commentEl = document.getElementById('derbyCommentaryText');
         if (commentEl) commentEl.innerHTML = `🍧 <strong>【경악】 [공 ${currentLeader.num}]</strong>번마 1등 달리다 말고 파라솔 펴고 아이스크림 먹방 실화냐?!`;
+        if (typeof setTvWipeReaction === 'function') setTvWipeReaction('🍧', '"1등 달리다 말고 아이스크림 먹방 실화냐?!"');
       }
 
       // 3. 🍌 Banana Peel Trap at ~580m
@@ -3294,6 +3484,7 @@ ${currentPinballReceiptQuote}
         const dropper = livingHorses[2] || livingHorses[0];
         derbyBananas.push({ x: dropper.x - 20, y: dropper.baseY, life: 300 });
         spawnDerbyPopText('🍌 바나나 투척!', '마리오카트 발동!', dropper.x, dropper.baseY - 15, '#facc15', 20);
+        if (typeof setTvWipeReaction === 'function') setTvWipeReaction('🍌', '"바나나 밟고 360도 스핀아웃! 마리오카트?!"');
       }
 
       // 4. 🍄 Giant Mega Ball at ~420m
@@ -3308,6 +3499,7 @@ ${currentPinballReceiptQuote}
           spawnDerbyPopText('🍄 巨大化!! 메가 거대화!', '주변 공들 날려버리기!!', candidate.x, candidate.baseY - 30, '#ec4899', 26);
           const commentEl = document.getElementById('derbyCommentaryText');
           if (commentEl) commentEl.innerHTML = `💥 <strong>【대충격】 [공 ${candidate.num}]</strong>번마 거대화 물약 복용 의혹! 몸집 3배로 주변 공들 밀쳐내기!`;
+          if (typeof setTvWipeReaction === 'function') setTvWipeReaction('🍄', `"대충격! [공 ${candidate.num}]번마 거대화로 주변 공들 밀쳐내기!"`);
         }
       }
 
@@ -3321,6 +3513,7 @@ ${currentPinballReceiptQuote}
           spawnDerbyPopText('🚀 ロケット発射! 로켓 배송!', '결승선으로 직행!!', candidate.x, candidate.baseY - 20, '#f97316', 24);
           const commentEl = document.getElementById('derbyCommentaryText');
           if (commentEl) commentEl.innerHTML = `🚀 <strong>【돌발】 [공 ${candidate.num}]</strong>번마 등 뒤에 로켓 부스터 점화! 결승선으로 총알 배송!`;
+          if (typeof setTvWipeReaction === 'function') setTvWipeReaction('🚀', `"로켓 부스터 점화! 결승선으로 총알 배송 발동!!"`);
         }
       }
 
@@ -3558,6 +3751,7 @@ ${currentPinballReceiptQuote}
 
       const statusEl = document.getElementById('derbyStatusText');
       if (statusEl) statusEl.textContent = '6 / 6 통과 완료! 🎉';
+      if (typeof setTvWipeReaction === 'function') setTvWipeReaction('🎉', '"골인 완료!! 1등 대박 골든 6두 확정!!"');
 
       const btnStart = document.getElementById('btnStartDerby');
       if (btnStart) btnStart.innerHTML = '<i class="fa-solid fa-trophy"></i> 우승 확정! 다시 하기';
@@ -3884,6 +4078,20 @@ ${currentPinballReceiptQuote}
       ctx.strokeRect(mmX + camRatio * mmW, mmY, Math.max(12, camW), mmH);
       ctx.restore();
     }
+
+    function derbyLoop() {
+      updateDerbyPhysics();
+      drawDerbyFrame();
+
+      if (derbyRunning && derbyFinishedHorses.length < 6) {
+        derbyAnimationId = requestAnimationFrame(derbyLoop);
+      } else if (derbyFinishedHorses.length >= 6) {
+        derbyRunning = false;
+        const btnStart = document.getElementById('btnStartDerby');
+        if (btnStart) btnStart.innerHTML = '<i class="fa-solid fa-flag-checkered"></i> 경기 종료 (6두 통과)';
+      }
+    }
+
 
     function copyDerbyNumbers() {
       if (derbyFinishedHorses.length < 6) {
@@ -4219,6 +4427,7 @@ ${currentDerbyReceiptQuote}
       if (commentEl) {
         commentEl.innerHTML = `🎯 <strong>【START CHUCKER 入賞!】</strong> 중앙 스타트 입상구 명중! 슬롯 추첨 가동!`;
       }
+      if (typeof setTvWipeReaction === 'function') setTvWipeReaction('🎯', '"스타트 차커 쏙 들어갔다! 3릴 슬롯 회전!!"');
 
       if (pachinkoSlotState === 'IDLE') {
         startLcdSlotSpin();
@@ -4261,6 +4470,7 @@ ${currentDerbyReceiptQuote}
       if (commentEl) {
         commentEl.innerHTML = `💥 <strong>【大当り!! 777 FEVER!】</strong> 초대박 대당첨 확변 돌입! 하단 대형 어태커 오픈!`;
       }
+      if (typeof setTvWipeReaction === 'function') setTvWipeReaction('🎰', '"대당첨 777 피버 떴다!! 어태커로 구슬 쏟아진다!!"');
 
       // Generate 6 unique lucky lotto numbers
       if (pachinkoWinningPool.length === 0) {
@@ -4368,6 +4578,7 @@ ${currentDerbyReceiptQuote}
             playSound('reach_alert');
             const commentEl = document.getElementById('pachinkoCommentaryText');
             if (commentEl) commentEl.innerHTML = `🔥 <strong>【激熱 リーチ!!】</strong> 7번 리치 성립! 숨막히는 가운데 릴 감속 연출!!`;
+            if (typeof setTvWipeReaction === 'function') setTvWipeReaction('🔥', '"키타아아!! 7번 격열 리치 성립!! 제발 맞춰라!!"');
           } else {
             // Not reach, center reel stops at t=105
             pachinkoReelSpeeds[1] = 0;
@@ -6186,6 +6397,37 @@ ${currentBattleReceiptQuote}
       initBattleBalls();
       generateNumbers();
     });
+
+    // =========================================================
+    // 📺 TV Broadcast Digital Clock & Wipe Reaction System
+    // =========================================================
+    function updateTvDigitalClock() {
+      const now = new Date();
+      const hrs = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      const el = document.getElementById('tvDigitalClock');
+      if (el) el.textContent = `${hrs}:${mins}`;
+    }
+    setInterval(updateTvDigitalClock, 1000);
+    updateTvDigitalClock();
+
+    function setTvWipeReaction(avatar, message) {
+      const avEl = document.getElementById('tvWipeAvatar');
+      const textEl = document.getElementById('tvWipeText');
+      if (avEl) avEl.textContent = avatar;
+      if (textEl) textEl.textContent = message;
+    }
+
   </script>
+  <!-- Floating Japanese Variety Wipe (와이프 / PIP 리액션 창) -->
+  <div class="tv-wipe-widget" id="tvWipeWidget">
+    <div class="tv-wipe-header">● 와이프 (ワイプ)</div>
+    <div class="tv-wipe-avatar" id="tvWipeAvatar">😲</div>
+    <div class="tv-wipe-content">
+      <div style="font-size:0.68rem; color:#94a3b8; margin-bottom:2px;">패널 실시간 리액션</div>
+      <div class="tv-wipe-bubble" id="tvWipeText">"자~ 과연 이번 주 1등 번호는?!"</div>
+    </div>
+  </div>
+
 </body>
 </html>
