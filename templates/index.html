@@ -593,7 +593,7 @@
         <button class="btn btn-outline" id="btnSync" onclick="syncData()">
           <i class="fa-solid fa-arrows-rotate"></i> 1초 최신 동기화
         </button>
-        <a href="/download/excel" class="btn btn-primary">
+        <a href="./lotto_history.xlsx" download="lotto_history.xlsx" class="btn btn-primary">
           <i class="fa-solid fa-file-excel"></i> 엑셀 다운로드 (전회차)
         </a>
       </div>
@@ -1095,8 +1095,6 @@
       updatePadLabels();
     }
 
-    // Strategy & Games Selection
-    function selectStrategy(strategy, el) {
     // Standalone Client-side Engine for GitHub Pages / Static Hosting
     let isStaticMode = false;
     let staticRecords = [];
