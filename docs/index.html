@@ -3,22 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>로또 6/45 AI 통계 분석기 & 스마트 조합 생성기</title>
+  <title>로또 6/45 AI 통계 & 45구 배틀로얄 서바이벌</title>
   <!-- Google Fonts & Font Awesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Chart.js -->
+  <!-- Chart.js & Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
     :root {
       --bg-primary: #0a0e17;
-      --bg-card: rgba(20, 27, 45, 0.75);
-      --bg-card-hover: rgba(30, 40, 65, 0.85);
+      --bg-card: rgba(20, 27, 45, 0.78);
+      --bg-card-hover: rgba(30, 40, 65, 0.9);
       --border-color: rgba(255, 255, 255, 0.08);
-      --border-glow: rgba(99, 102, 241, 0.35);
+      --border-glow: rgba(99, 102, 241, 0.4);
       --primary: #6366f1;
       --primary-light: #818cf8;
       --accent: #ec4899;
@@ -41,8 +42,8 @@
     body {
       background-color: var(--bg-primary);
       background-image: 
-        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.12) 0px, transparent 50%),
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.18) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.14) 0px, transparent 50%),
         radial-gradient(at 50% 50%, rgba(30, 41, 59, 0.5) 0px, transparent 100%);
       background-attachment: fixed;
       color: var(--text-main);
@@ -53,13 +54,13 @@
 
     /* Header */
     header {
-      background: rgba(10, 14, 23, 0.8);
+      background: rgba(10, 14, 23, 0.85);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border-color);
       position: sticky;
       top: 0;
       z-index: 100;
-      padding: 1rem 2rem;
+      padding: 0.9rem 1.8rem;
     }
 
     .header-inner {
@@ -69,7 +70,7 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 0.8rem;
     }
 
     .brand {
@@ -91,7 +92,7 @@
     }
 
     .brand h1 {
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 800;
       letter-spacing: -0.5px;
       background: linear-gradient(to right, #ffffff, #cbd5e1);
@@ -100,27 +101,27 @@
     }
 
     .brand p {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
     }
 
     .header-actions {
       display: flex;
-      gap: 0.6rem;
+      gap: 0.5rem;
       align-items: center;
     }
 
     /* Buttons */
     .btn {
-      padding: 0.55rem 1.1rem;
+      padding: 0.5rem 1rem;
       border-radius: 10px;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      transition: all 0.25s ease;
+      gap: 0.45rem;
+      transition: all 0.22s ease;
       border: 1px solid transparent;
       text-decoration: none;
     }
@@ -137,6 +138,17 @@
       box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
     }
 
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+    }
+
+    .btn-danger:hover {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      transform: translateY(-1px);
+    }
+
     .btn-outline {
       background: rgba(255, 255, 255, 0.05);
       color: var(--text-main);
@@ -148,21 +160,18 @@
       border-color: rgba(255, 255, 255, 0.2);
     }
 
-    .btn-success {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: white;
-    }
-
-    .btn-success:hover {
-      background: linear-gradient(135deg, #059669, #047857);
+    .btn-outline.active {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: var(--primary);
+      color: #818cf8;
     }
 
     /* Main Container */
     main {
       flex: 1;
       max-width: 1300px;
-      margin: 1.5rem auto;
-      padding: 0 1.5rem;
+      margin: 1.2rem auto;
+      padding: 0 1.2rem;
       width: 100%;
     }
 
@@ -170,72 +179,72 @@
     .latest-banner {
       background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
       border: 1px solid var(--border-glow);
-      border-radius: 20px;
-      padding: 1.5rem 2rem;
-      margin-bottom: 2rem;
+      border-radius: 18px;
+      padding: 1.2rem 1.8rem;
+      margin-bottom: 1.5rem;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 1.5rem;
+      gap: 1.2rem;
     }
 
     .draw-info h2 {
-      font-size: 1.5rem;
+      font-size: 1.35rem;
       font-weight: 800;
       color: #fff;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.5rem;
     }
 
     .draw-info .draw-date {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
-      margin-top: 0.25rem;
+      margin-top: 0.2rem;
     }
 
     .draw-prizes {
       display: flex;
-      gap: 1.5rem;
-      margin-top: 0.6rem;
-      font-size: 0.9rem;
+      gap: 1.2rem;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
     }
 
     .prize-badge {
       color: #38bdf8;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .balls-row {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.45rem;
       flex-wrap: wrap;
     }
 
     .plus-sign {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       color: var(--text-muted);
-      margin: 0 0.3rem;
+      margin: 0 0.2rem;
       font-weight: 700;
     }
 
     /* 3D Lotto Balls */
     .ball {
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
       font-family: 'Outfit', sans-serif;
       color: #ffffff;
       box-shadow: 
-        inset -3px -3px 8px rgba(0, 0, 0, 0.4),
+        inset -3px -3px 7px rgba(0, 0, 0, 0.4),
         0 4px 10px rgba(0, 0, 0, 0.35);
       text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
       user-select: none;
@@ -247,15 +256,21 @@
     }
 
     .ball.sm {
-      width: 34px;
-      height: 34px;
-      font-size: 0.92rem;
+      width: 32px;
+      height: 32px;
+      font-size: 0.88rem;
     }
 
     .ball.xs {
-      width: 28px;
-      height: 28px;
-      font-size: 0.8rem;
+      width: 26px;
+      height: 26px;
+      font-size: 0.76rem;
+    }
+
+    .ball.lg {
+      width: 52px;
+      height: 52px;
+      font-size: 1.35rem;
     }
 
     .ball.c-yellow { background: var(--ball-yellow); }
@@ -269,23 +284,23 @@
       display: flex;
       gap: 0.5rem;
       border-bottom: 1px solid var(--border-color);
-      margin-bottom: 1.8rem;
+      margin-bottom: 1.5rem;
       overflow-x: auto;
       padding-bottom: 0.5rem;
     }
 
     .tab-btn {
-      padding: 0.75rem 1.4rem;
+      padding: 0.7rem 1.25rem;
       border-radius: 12px;
       background: transparent;
       border: 1px solid transparent;
       color: var(--text-muted);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.5rem;
       transition: all 0.2s ease;
       white-space: nowrap;
     }
@@ -301,7 +316,22 @@
       border-color: rgba(99, 102, 241, 0.3);
     }
 
-    /* Tab Contents */
+    .tab-badge {
+      background: linear-gradient(135deg, #ef4444, #ec4899);
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 0.15rem 0.45rem;
+      border-radius: 10px;
+      text-transform: uppercase;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
     .tab-content {
       display: none;
     }
@@ -337,7 +367,157 @@
       color: #fff;
     }
 
-    /* Generator Grid */
+    /* ========================================= */
+    /* BATTLE ROYALE ARENA STYLES                */
+    /* ========================================= */
+    .battle-layout {
+      display: grid;
+      grid-template-columns: 540px 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 950px) {
+      .battle-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .arena-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle, rgba(20, 27, 45, 0.9) 0%, rgba(10, 14, 23, 0.98) 100%);
+      border: 2px solid var(--border-glow);
+      border-radius: 20px;
+      padding: 1rem;
+      position: relative;
+      box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
+    }
+
+    #battleCanvas {
+      width: 500px;
+      height: 500px;
+      max-width: 100%;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.85);
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    .battle-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .battle-controls-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.2rem;
+    }
+
+    .killfeed-box {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      height: 220px;
+      overflow-y: auto;
+      padding: 0.8rem;
+      font-size: 0.82rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .kill-msg {
+      padding: 0.35rem 0.6rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-left: 3px solid #ef4444;
+      border-radius: 4px;
+      animation: slideIn 0.2s ease;
+      line-height: 1.4;
+    }
+
+    .kill-msg.danger-zone {
+      border-left-color: #ec4899;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-8px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .survivors-banner {
+      background: linear-gradient(135deg, rgba(245, 159, 0, 0.15), rgba(236, 72, 153, 0.2));
+      border: 2px solid #fbc02d;
+      border-radius: 16px;
+      padding: 1.2rem;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(251, 192, 45, 0.3);
+      display: none;
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Meme Receipt Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .receipt-paper {
+      background: #fdfbf7;
+      color: #1a1a1a;
+      width: 360px;
+      max-width: 92%;
+      padding: 2rem 1.5rem;
+      font-family: 'Courier New', Courier, monospace;
+      border-radius: 4px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      position: relative;
+      background-image: radial-gradient(#d3cbbd 10%, transparent 11%);
+      background-size: 16px 16px;
+    }
+
+    .receipt-paper::before, .receipt-paper::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 12px;
+      background-size: 14px 14px;
+    }
+
+    .receipt-paper::before {
+      top: -12px;
+      background-image: radial-gradient(circle, transparent 60%, #fdfbf7 65%);
+    }
+
+    .receipt-paper::after {
+      bottom: -12px;
+      background-image: radial-gradient(circle, #fdfbf7 60%, transparent 65%);
+    }
+
+    /* Generator Layout */
     .generator-layout {
       display: grid;
       grid-template-columns: 360px 1fr;
@@ -409,7 +589,7 @@
       line-height: 1.35;
     }
 
-    /* Number Picker for Fixed/Exclude */
+    /* Number Picker */
     .number-pad {
       display: grid;
       grid-template-columns: repeat(9, 1fr);
@@ -532,7 +712,6 @@
       border-bottom: none;
     }
 
-    /* Table styling */
     .custom-table {
       width: 100%;
       border-collapse: collapse;
@@ -554,25 +733,6 @@
     .custom-table tr:hover {
       background: rgba(255, 255, 255, 0.02);
     }
-
-    /* Print styles */
-    @media print {
-      body {
-        background: white !important;
-        color: black !important;
-      }
-      header, .tabs-nav, .generator-layout > div:first-child, .btn {
-        display: none !important;
-      }
-      .generator-layout {
-        display: block !important;
-      }
-      .ticket-container {
-        border: 2px solid #000 !important;
-        background: white !important;
-        color: black !important;
-      }
-    }
   </style>
 </head>
 <body>
@@ -585,16 +745,19 @@
           <i class="fa-solid fa-dice-d20"></i>
         </div>
         <div>
-          <h1>로또 6/45 AI 통계 분석기</h1>
-          <p>역대 1,247회 전수 통계 및 스마트 알고리즘 조합 엔진</p>
+          <h1>로또 6/45 AI 통계 & 45구 배틀로얄</h1>
+          <p>역대 1,247회 전수 통계 & 최후의 생존 공 6개 서바이벌</p>
         </div>
       </div>
       <div class="header-actions">
+        <button class="btn btn-outline" id="btnSound" onclick="toggleSound()">
+          <i class="fa-solid fa-volume-high"></i> 사운드 ON
+        </button>
         <button class="btn btn-outline" id="btnSync" onclick="syncData()">
-          <i class="fa-solid fa-arrows-rotate"></i> 1초 최신 동기화
+          <i class="fa-solid fa-arrows-rotate"></i> 최신 동기화
         </button>
         <a href="./lotto_history.xlsx" download="lotto_history.xlsx" class="btn btn-primary">
-          <i class="fa-solid fa-file-excel"></i> 엑셀 다운로드 (전회차)
+          <i class="fa-solid fa-file-excel"></i> 엑셀 다운로드
         </a>
       </div>
     </div>
@@ -615,15 +778,16 @@
           <div>당첨자수: <span style="font-weight:700; color:#fff;" id="latestWinners">-</span>명 (<span id="latestType">자동 -, 수동 -</span>)</div>
         </div>
       </div>
-      <div class="balls-row" id="latestBalls">
-        <!-- Balls rendered by JS -->
-      </div>
+      <div class="balls-row" id="latestBalls"></div>
     </div>
 
     <!-- Navigation Tabs -->
     <div class="tabs-nav">
-      <button class="tab-btn active" onclick="switchTab('generator')">
-        <i class="fa-solid fa-wand-magic-sparkles"></i> 스마트 번호 생성기
+      <button class="tab-btn active" onclick="switchTab('battle')">
+        <span style="font-size:1.15rem;">🥊</span> 45구 배틀로얄 서바이벌 <span class="tab-badge">인기</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('generator')">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> AI 통계 분석기
       </button>
       <button class="tab-btn" onclick="switchTab('stats')">
         <i class="fa-solid fa-chart-pie"></i> 역대 심층 통계 분석
@@ -636,8 +800,105 @@
       </button>
     </div>
 
-    <!-- TAB 1: GENERATOR -->
-    <div id="tab-generator" class="tab-content active">
+    <!-- ============================================== -->
+    <!-- TAB 0: 45구 배틀로얄 서바이벌 (NEW FUN FEATURE) -->
+    <!-- ============================================== -->
+    <div id="tab-battle" class="tab-content active">
+      <div class="battle-layout">
+        <!-- Canvas Arena Box -->
+        <div class="arena-box">
+          <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-bottom:0.6rem; padding:0 0.5rem;">
+            <div style="font-size:0.95rem; font-weight:800; color:#f8fafc; display:flex; align-items:center; gap:0.4rem;">
+              <span style="color:#ef4444;">● LIVE</span> 45구 넉다운 데스매치 아레나
+            </div>
+            <div style="font-size:0.8rem; color:var(--text-muted);" id="safeZoneLabel">
+              자기장 축소: 대기 중
+            </div>
+          </div>
+          <canvas id="battleCanvas" width="500" height="500"></canvas>
+        </div>
+
+        <!-- Sidebar / Controls / Kill Feed -->
+        <div class="battle-sidebar">
+          <!-- Controls Card -->
+          <div class="battle-controls-card">
+            <h3 style="font-size:1.1rem; font-weight:800; color:#fff; margin-bottom:0.8rem; display:flex; align-items:center; gap:0.5rem;">
+              <i class="fa-solid fa-gamepad" style="color:#ec4899;"></i> 배틀 컨트롤러
+            </h3>
+
+            <!-- Action Buttons -->
+            <div style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">
+              <button class="btn btn-danger" style="flex:1;" id="btnStartBattle" onclick="startBattle()">
+                <i class="fa-solid fa-play"></i> 배틀 시작!
+              </button>
+              <button class="btn btn-outline" onclick="pauseBattle()" id="btnPauseBattle">
+                <i class="fa-solid fa-pause"></i> 일시정지
+              </button>
+              <button class="btn btn-outline" onclick="resetBattle()">
+                <i class="fa-solid fa-rotate-right"></i> 다시 배치
+              </button>
+              <button class="btn btn-outline" onclick="skipToFinish()">
+                <i class="fa-solid fa-forward-fast"></i> 즉시 판정 (스킵)
+              </button>
+            </div>
+
+            <!-- Speed Selector -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+              <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">진행 속도:</span>
+              <div style="display:flex; gap:0.4rem;">
+                <button class="btn btn-outline btn-sm active" id="spd1" onclick="setBattleSpeed(1, this)">1x 보통</button>
+                <button class="btn btn-outline btn-sm" id="spd2" onclick="setBattleSpeed(2, this)">2x 빠름</button>
+                <button class="btn btn-outline btn-sm" id="spd4" onclick="setBattleSpeed(4, this)">4x 광속</button>
+              </div>
+            </div>
+
+            <!-- Live Status -->
+            <div style="background:rgba(255,255,255,0.03); padding:0.8rem; border-radius:10px; margin-bottom:0.8rem;">
+              <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:0.3rem;">
+                <span style="color:var(--text-muted);">생존 볼:</span>
+                <span style="font-weight:800; color:#38bdf8;" id="aliveCountText">45 / 45 (최후 6인까지)</span>
+              </div>
+              <div style="width:100%; height:8px; background:rgba(255,255,255,0.1); border-radius:4px; overflow:hidden;">
+                <div id="aliveProgressBar" style="width:100%; height:100%; background:linear-gradient(to right, #ef4444, #10b981); transition:width 0.2s;"></div>
+              </div>
+            </div>
+
+            <!-- Kill Feed -->
+            <label class="control-label" style="margin-bottom:0.4rem; display:flex; justify-content:space-between;">
+              <span>⚔️ 실시간 전투 중계 (병맛 로그)</span>
+              <span style="font-size:0.75rem; color:var(--text-muted);">충돌 시 HP 감소</span>
+            </label>
+            <div class="killfeed-box" id="killFeed">
+              <div style="color:var(--text-muted); text-align:center; padding:2rem 0;">
+                배틀 시작 버튼을 누르면 45개 볼의 난투극이 시작됩니다!
+              </div>
+            </div>
+          </div>
+
+          <!-- Survivors Result Card (Hidden until 6 left) -->
+          <div class="survivors-banner" id="survivorsBanner">
+            <h3 style="font-size:1.2rem; font-weight:800; color:#fbc02d; margin-bottom:0.4rem;">
+              🎉 최후의 생존자 6인 확정!
+            </h3>
+            <p style="font-size:0.82rem; color:#f8fafc; margin-bottom:0.8rem;">
+              치열한 45:1의 난투극에서 살아남은 진짜 운빨 최강 번호입니다!
+            </p>
+            <div class="balls-row" id="survivorBallsRow" style="justify-content:center; margin-bottom:1rem;"></div>
+            <div style="display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="copySurvivorNumbers()">
+                <i class="fa-solid fa-copy"></i> 카톡 공유 복사
+              </button>
+              <button class="btn btn-outline" style="background:#fff; color:#111; font-weight:700;" onclick="openReceiptModal()">
+                <i class="fa-solid fa-receipt"></i> 병맛 영수증 부적 발급
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 1: GENERATOR (기존 AI 분석기) -->
+    <div id="tab-generator" class="tab-content">
       <div class="generator-layout">
         <!-- Controls Column -->
         <div>
@@ -685,17 +946,15 @@
               </div>
             </div>
 
-            <!-- Number Picker (Fixed / Exclude) -->
+            <!-- Number Picker -->
             <div class="control-group">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
                 <label class="control-label" style="margin: 0;">고정수 / 제외수 커스텀 (선택)</label>
                 <div style="font-size: 0.75rem; color: var(--text-muted);">
-                  <span style="color:#10b981;">●</span> 고정 (좌클릭) | <span style="color:#ef4444;">●</span> 제외 (우클릭/더블클릭)
+                  <span style="color:#10b981;">●</span> 고정 (좌클릭) | <span style="color:#ef4444;">●</span> 제외 (우클릭)
                 </div>
               </div>
-              <div class="number-pad" id="customPad">
-                <!-- Generated by JS 1~45 -->
-              </div>
+              <div class="number-pad" id="customPad"></div>
               <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted);">
                 <div>고정수: <span id="fixedListText" style="color:#10b981; font-weight:700;">없음</span></div>
                 <div>제외수: <span id="excludeListText" style="color:#ef4444; font-weight:700;">없음</span></div>
@@ -732,7 +991,6 @@
             </div>
 
             <div id="ticketRows">
-              <!-- Rendered games -->
               <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
                 <i class="fa-solid fa-dice" style="font-size: 2.5rem; margin-bottom: 0.8rem; opacity: 0.4;"></i>
                 <p>좌측 '최적 조합 생성하기' 버튼을 누르면 AI 맞춤 번호가 생성됩니다.</p>
@@ -746,7 +1004,6 @@
     <!-- TAB 2: STATS -->
     <div id="tab-stats" class="tab-content">
       <div class="stats-grid">
-        <!-- Top / Bottom Numbers -->
         <div class="card">
           <h3 class="card-title"><i class="fa-solid fa-fire" style="color:#ef4444;"></i> 최다 출현 번호 (Top 10)</h3>
           <div id="topList"></div>
@@ -757,15 +1014,13 @@
           <div id="bottomList"></div>
         </div>
 
-        <!-- Cold Numbers (Longest Unseen) -->
         <div class="card">
           <h3 class="card-title"><i class="fa-solid fa-snowflake" style="color:#06b6d4;"></i> 장기 미출현 번호 (콜드수 Top 10)</h3>
           <div id="coldList"></div>
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
-        <!-- Top Pairs Table -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
         <div class="card">
           <h3 class="card-title"><i class="fa-solid fa-people-arrows" style="color:#a855f7;"></i> 가장 많이 함께 나온 짝꿍 번호 Top 10</h3>
           <table class="custom-table" id="pairsTable">
@@ -780,7 +1035,6 @@
           </table>
         </div>
 
-        <!-- Section Chart -->
         <div class="card">
           <h3 class="card-title"><i class="fa-solid fa-chart-pie" style="color:#10b981;"></i> 5개 번호대 구간별 분포 비율</h3>
           <div style="max-height: 280px; display: flex; justify-content: center;">
@@ -882,6 +1136,44 @@
     </div>
   </main>
 
+  <!-- Meme Lucky Receipt Modal -->
+  <div class="modal-overlay" id="receiptModal" onclick="closeReceiptModal(event)">
+    <div class="receipt-paper" onclick="event.stopPropagation()">
+      <div style="text-align:center; font-weight:800; font-size:1.15rem; border-bottom:2px dashed #000; padding-bottom:0.6rem; margin-bottom:0.8rem;">
+        🙏 1등 당첨 기원 조상님 영수증 🙏
+      </div>
+      <div style="font-size:0.78rem; line-height:1.5; margin-bottom:0.8rem;">
+        <div>[발행] 대한민국 운빨 총본산</div>
+        <div>[인증] 45:1 서바이벌 배틀로얄 승자</div>
+        <div>[일자] <span id="receiptDate">2026.10.29</span></div>
+      </div>
+      <div style="border-top:1px dashed #444; border-bottom:1px dashed #444; padding:0.8rem 0; margin-bottom:0.8rem; text-align:center;">
+        <div style="font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">[최후 생존 6구]</div>
+        <div style="font-size:1.4rem; font-weight:800; letter-spacing:2px; color:#c92a2a;" id="receiptNumbers">
+          08 14 21 22 42 45
+        </div>
+      </div>
+      <div style="font-size:0.75rem; line-height:1.6; margin-bottom:1rem;">
+        <div style="font-weight:700; margin-bottom:0.2rem;">[※ 1등 당첨 시 필수 행동 수칙]</div>
+        <div>1. 사직서는 통장에 돈 꽂히기 전까지 품에 숨기기</div>
+        <div>2. 월요일 출근 때 혼자 싱글벙글 웃지 않기 (들킴 방지)</div>
+        <div>3. 아는 누나에게 소고기 쏘기 (민법상 불복 불가)</div>
+        <div>4. 농협 본점 갈 때 택시 기사님께 농협이라 말 안 하기</div>
+      </div>
+      <div style="text-align:center; font-size:0.8rem; font-weight:700; border-top:2px dashed #000; padding-top:0.6rem;">
+        조상님 曰: "이번엔 너다, 믿고 가라."
+      </div>
+      <div style="margin-top:1.2rem; display:flex; gap:0.5rem;">
+        <button class="btn btn-primary" style="flex:1; justify-content:center; font-size:0.8rem;" onclick="copyReceiptText()">
+          텍스트 복사
+        </button>
+        <button class="btn btn-outline" style="color:#000; border-color:#888; font-size:0.8rem;" onclick="closeReceiptModal()">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // State
     let currentStrategy = 'golden';
@@ -891,6 +1183,70 @@
     let backtestNumbers = new Set();
     let currentHistoryPage = 1;
     let sectionChartObj = null;
+
+    // Sound Synthesizer (Native Web Audio API)
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById('btnSound');
+      if (soundEnabled) {
+        btn.innerHTML = '<i class="fa-solid fa-volume-high"></i> 사운드 ON';
+        btn.classList.remove('active');
+        playSound('hit');
+      } else {
+        btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> 사운드 OFF';
+        btn.classList.add('active');
+      }
+    }
+
+    function playSound(type) {
+      if (!soundEnabled) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'hit') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(350, now);
+          osc.frequency.exponentialRampToValueAtTime(100, now + 0.05);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.05);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        } else if (type === 'kill') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.exponentialRampToValueAtTime(30, now + 0.18);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.18);
+          osc.start(now);
+          osc.stop(now + 0.18);
+        } else if (type === 'win') {
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          notes.forEach((freq, idx) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.type = 'triangle';
+            o.frequency.value = freq;
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            const t = now + idx * 0.1;
+            g.gain.setValueAtTime(0.18, t);
+            g.gain.linearRampToValueAtTime(0.001, t + 0.35);
+            o.start(t);
+            o.stop(t + 0.35);
+          });
+        }
+      } catch (e) {}
+    }
 
     // Helper: Ball Color Class
     function getBallClass(num) {
@@ -920,182 +1276,466 @@
         loadPairs();
       } else if (tabId === 'history') {
         loadHistory(1);
+      } else if (tabId === 'battle') {
+        if (!battleRunning && aliveCount === 45) {
+          drawBattleFrame();
+        }
       }
     }
 
-    // Initial Load
-    async function loadSummary() {
-      try {
-        const res = await fetch('/api/summary');
-        const data = await res.json();
-        
-        // Latest banner
-        const lat = data.latest_round;
-        document.getElementById('latestRound').textContent = lat.round;
-        document.getElementById('latestDate').textContent = `추첨일: ${lat.date}`;
-        document.getElementById('latestPrize').textContent = Number(lat.prize_1st).toLocaleString();
-        document.getElementById('latestWinners').textContent = lat.winner_count;
-        document.getElementById('latestType').textContent = `자동 ${lat.auto || 0}, 수동 ${lat.manual || 0}, 반자동 ${lat.semi_auto || 0}`;
+    // =========================================================
+    // 🥊 45구 배틀로얄 물리 엔진 & 게임 루프 (CANVAS 2D)
+    // =========================================================
+    const canvas = document.getElementById('battleCanvas');
+    const ctx = canvas.getContext('2d');
+    const ARENA_CENTER = 250;
+    const INITIAL_RADIUS = 240;
+    let safeRadius = INITIAL_RADIUS;
+    let battleRunning = false;
+    let battleSpeed = 1;
+    let battleBalls = [];
+    let particles = [];
+    let aliveCount = 45;
+    let lastFrameTime = 0;
+    let battleAnimationId = null;
+    let latestSurvivors = [];
 
-        const ballsRow = document.getElementById('latestBalls');
-        ballsRow.innerHTML = '';
-        lat.numbers.forEach(n => {
-          ballsRow.appendChild(createBallElement(n));
+    const memeFaces = ['(>_<)', '(•̀ᴗ•́)', '(¬‿¬)', '(ʘ‿ʘ)', '(°ㅂ°)', '(ㅇㅅㅇ)', '(•_•)', '(ง •̀_•́)ง'];
+    const memeKillMessages = [
+      "님이 엉덩이 밀치기로 낭떠러지로 떨궜습니다!",
+      "님이 '내가 1등 할 거다'라며 장외 홈런을 날렸습니다!",
+      "님이 자기장 사우나를 견디지 못하고 녹아내렸습니다!",
+      "님이 '어어 밀지마라'를 외치며 굴러 떨어졌습니다!",
+      "님의 묵직한 팩트폭격을 맞고 멘탈 붕괴로 탈락!",
+      "님이 발을 헛디뎌 추락했습니다. (누나 소고기 확률 -1%)",
+      "님이 로또 종이에 들어갈 자격이 부족하여 컷당했습니다!",
+      "님의 회심의 일격을 맞고 밤하늘의 별이 되었습니다!",
+      "님이 벼락 맞고 탈락했습니다 (로또 당첨 확률보다 높음)",
+      "님이 '대표님 사직서'를 품에 안고 장렬히 전사했습니다!",
+      "님이 '다음 기회에...'를 외치며 리타이어했습니다."
+    ];
+
+    function initBattleBalls() {
+      battleBalls = [];
+      particles = [];
+      aliveCount = 45;
+      safeRadius = INITIAL_RADIUS;
+      latestSurvivors = [];
+      document.getElementById('survivorsBanner').style.display = 'none';
+
+      for (let i = 1; i <= 45; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const dist = Math.random() * (INITIAL_RADIUS - 40);
+        const speed = 1.2 + Math.random() * 1.5;
+        const moveAngle = Math.random() * Math.PI * 2;
+
+        let col = '#fbc02d';
+        if (i > 10 && i <= 20) col = '#1e88e5';
+        else if (i > 20 && i <= 30) col = '#e53935';
+        else if (i > 30 && i <= 40) col = '#78909c';
+        else if (i > 40) col = '#43a047';
+
+        battleBalls.push({
+          num: i,
+          x: ARENA_CENTER + Math.cos(angle) * dist,
+          y: ARENA_CENTER + Math.sin(angle) * dist,
+          vx: Math.cos(moveAngle) * speed,
+          vy: Math.sin(moveAngle) * speed,
+          r: 15,
+          color: col,
+          hp: 100,
+          alive: true,
+          kills: 0,
+          face: memeFaces[Math.floor(Math.random() * memeFaces.length)]
         });
-        const plus = document.createElement('div');
-        plus.className = 'plus-sign';
-        plus.textContent = '+';
-        ballsRow.appendChild(plus);
-        ballsRow.appendChild(createBallElement(lat.bonus));
-
-        // Stats tab: Top / Bottom / Cold
-        renderStatList('topList', data.top10, 'count', '회 출현');
-        renderStatList('bottomList', data.bottom10, 'count', '회 출현');
-        renderStatList('coldList', data.cold10, 'period', '회차 연속 미출현');
-
-        // Section Chart
-        renderSectionChart(data.sections);
-      } catch (err) {
-        console.error("Error loading summary:", err);
       }
+      updateBattleUI();
+      drawBattleFrame();
     }
 
-    function renderStatList(elId, list, valKey, suffix) {
-      const el = document.getElementById(elId);
-      el.innerHTML = '';
-      list.forEach((item, idx) => {
-        const row = document.createElement('div');
-        row.className = 'stat-list-item';
-        row.innerHTML = `
-          <div style="display:flex; align-items:center; gap:0.6rem;">
-            <span style="font-weight:700; color:var(--text-muted); width:20px;">${idx+1}</span>
-            <div class="ball sm ${getBallClass(item.number)}">${item.number}</div>
-          </div>
-          <div style="font-weight:700; color:#fff;">${item[valKey]} <span style="font-size:0.8rem; color:var(--text-muted); font-weight:normal;">${suffix}</span></div>
-        `;
-        el.appendChild(row);
-      });
+    function startBattle() {
+      if (battleRunning) return;
+      if (aliveCount <= 6) {
+        initBattleBalls();
+      }
+      battleRunning = true;
+      document.getElementById('btnStartBattle').innerHTML = '<i class="fa-solid fa-bolt"></i> 전투 진행 중!';
+      document.getElementById('btnStartBattle').classList.add('active');
+      lastFrameTime = performance.now();
+      battleAnimationId = requestAnimationFrame(battleLoop);
     }
 
-    function renderSectionChart(sections) {
-      const ctx = document.getElementById('sectionChart');
-      if (!ctx) return;
-      if (sectionChartObj) sectionChartObj.destroy();
+    function pauseBattle() {
+      battleRunning = false;
+      if (battleAnimationId) cancelAnimationFrame(battleAnimationId);
+      document.getElementById('btnStartBattle').innerHTML = '<i class="fa-solid fa-play"></i> 배틀 재개';
+      document.getElementById('btnStartBattle').classList.remove('active');
+    }
 
-      sectionChartObj = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: Object.keys(sections),
-          datasets: [{
-            data: Object.values(sections),
-            backgroundColor: ['#fbc02d', '#1e88e5', '#e53935', '#78909c', '#43a047'],
-            borderWidth: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { color: '#cbd5e1', font: { family: 'Pretendard', size: 12 } }
-            }
+    function resetBattle() {
+      pauseBattle();
+      initBattleBalls();
+      const feed = document.getElementById('killFeed');
+      feed.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding:2rem 0;">배틀을 다시 준비했습니다. 시작 버튼을 누르세요!</div>';
+    }
+
+    function setBattleSpeed(spd, btn) {
+      battleSpeed = spd;
+      document.querySelectorAll('#spd1, #spd2, #spd4').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function skipToFinish() {
+      if (aliveCount <= 6) return;
+      // Fast forward physics until 6 remain
+      let safetyIters = 0;
+      while (aliveCount > 6 && safetyIters < 20000) {
+        safetyIters++;
+        safeRadius = Math.max(90, safeRadius - 0.15);
+        for (let b of battleBalls) {
+          if (!b.alive) continue;
+          b.x += b.vx * 3;
+          b.y += b.vy * 3;
+          const d = Math.hypot(b.x - ARENA_CENTER, b.y - ARENA_CENTER);
+          if (d > safeRadius) {
+            b.hp -= 25;
+            if (b.hp <= 0) eliminateBall(b, null, true);
           }
         }
-      });
+        // Random random damage
+        if (safetyIters % 5 === 0) {
+          const living = battleBalls.filter(x => x.alive);
+          if (living.length > 6) {
+            const victim = living[Math.floor(Math.random() * living.length)];
+            victim.hp -= 35;
+            if (victim.hp <= 0) eliminateBall(victim, null, false);
+          }
+        }
+      }
+      drawBattleFrame();
+      checkBattleOver();
     }
 
-    async function loadPairs() {
-      try {
-        const res = await fetch('/api/pairs');
-        const data = await res.json();
-        const tbody = document.querySelector('#pairsTable tbody');
-        tbody.innerHTML = '';
-        data.pairs.slice(0, 10).forEach((p, idx) => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td style="font-weight:700;">${idx + 1}</td>
-            <td>
-              <div style="display:inline-flex; gap:0.4rem;">
-                <div class="ball sm ${getBallClass(p.pair[0])}">${p.pair[0]}</div>
-                <div class="ball sm ${getBallClass(p.pair[1])}">${p.pair[1]}</div>
-              </div>
-            </td>
-            <td style="font-weight:700; color:#38bdf8;">${p.count}회</td>
-          `;
-          tbody.appendChild(tr);
+    function battleLoop(currentTime) {
+      if (!battleRunning) return;
+      const dt = Math.min((currentTime - lastFrameTime) / 1000, 0.1);
+      lastFrameTime = currentTime;
+
+      for (let step = 0; step < battleSpeed; step++) {
+        updateBattlePhysics(0.016);
+      }
+
+      drawBattleFrame();
+
+      if (aliveCount > 6) {
+        battleAnimationId = requestAnimationFrame(battleLoop);
+      } else {
+        checkBattleOver();
+      }
+    }
+
+    function updateBattlePhysics(dt) {
+      // 1. 자기장 서서히 축소 (240px -> 80px)
+      if (safeRadius > 85) {
+        safeRadius -= 0.045 * battleSpeed;
+      }
+
+      // 2. 공 이동 및 벽/자기장 충돌
+      for (let i = 0; i < battleBalls.length; i++) {
+        const b = battleBalls[i];
+        if (!b.alive) continue;
+
+        b.x += b.vx;
+        b.y += b.vy;
+
+        // 원형 아레나 벽 반사
+        const distFromCenter = Math.hypot(b.x - ARENA_CENTER, b.y - ARENA_CENTER);
+        if (distFromCenter > INITIAL_RADIUS - b.r) {
+          const nx = (b.x - ARENA_CENTER) / distFromCenter;
+          const ny = (b.y - ARENA_CENTER) / distFromCenter;
+          const dot = b.vx * nx + b.vy * ny;
+          b.vx -= 2 * dot * nx;
+          b.vy -= 2 * dot * ny;
+          b.x = ARENA_CENTER + nx * (INITIAL_RADIUS - b.r);
+          b.y = ARENA_CENTER + ny * (INITIAL_RADIUS - b.r);
+        }
+
+        // 자기장 밖이면 데미지
+        if (distFromCenter > safeRadius) {
+          b.hp -= 0.65;
+          if (Math.random() < 0.15) {
+            spawnParticles(b.x, b.y, '#ec4899', 2);
+          }
+          if (b.hp <= 0) {
+            eliminateBall(b, null, true);
+            continue;
+          }
+        }
+
+        // 3. 공과 공 사이의 탄성 충돌
+        for (let j = i + 1; j < battleBalls.length; j++) {
+          const b2 = battleBalls[j];
+          if (!b2.alive) continue;
+
+          const dx = b2.x - b.x;
+          const dy = b2.y - b.y;
+          const d = Math.hypot(dx, dy);
+
+          if (d < b.r + b2.r && d > 0) {
+            // 정규화 벡터
+            const nx = dx / d;
+            const ny = dy / d;
+
+            // 겹침 해제
+            const overlap = (b.r + b2.r) - d;
+            b.x -= nx * overlap * 0.5;
+            b.y -= ny * overlap * 0.5;
+            b2.x += nx * overlap * 0.5;
+            b2.y += ny * overlap * 0.5;
+
+            // 탄성 충돌 속도 교환
+            const kx = b.vx - b2.vx;
+            const ky = b.vy - b2.vy;
+            const p = 2 * (nx * kx + ny * ky) / 2;
+
+            b.vx -= p * nx * 1.05;
+            b.vy -= p * ny * 1.05;
+            b2.vx += p * nx * 1.05;
+            b2.vy += p * ny * 1.05;
+
+            // 충돌 데미지
+            const dmg = 2 + Math.random() * 5;
+            b.hp -= dmg;
+            b2.hp -= dmg;
+
+            if (Math.random() < 0.25) playSound('hit');
+            spawnParticles((b.x + b2.x)/2, (b.y + b2.y)/2, '#fff', 3);
+
+            if (b.hp <= 0) eliminateBall(b, b2, false);
+            if (b2.hp <= 0) eliminateBall(b2, b, false);
+          }
+        }
+      }
+
+      // 파티클 업데이트
+      for (let p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.03;
+      }
+      particles = particles.filter(p => p.life > 0);
+    }
+
+    function eliminateBall(victim, killer, byZone) {
+      if (!victim.alive) return;
+      victim.alive = false;
+      aliveCount--;
+      playSound('kill');
+      spawnParticles(victim.x, victim.y, victim.color, 16);
+
+      if (killer) killer.kills++;
+
+      // Kill Feed 메시지
+      const feed = document.getElementById('killFeed');
+      const msg = document.createElement('div');
+      msg.className = `kill-msg ${byZone ? 'danger-zone' : ''}`;
+
+      const randMeme = memeKillMessages[Math.floor(Math.random() * memeKillMessages.length)];
+      if (byZone) {
+        msg.innerHTML = `💀 <strong>[공 ${victim.num}]</strong> 님이 자기장에 타죽었습니다! <span style="color:#94a3b8;">(${aliveCount}명 생존)</span>`;
+      } else if (killer) {
+        msg.innerHTML = `⚔️ <strong>[공 ${killer.num}]</strong> 님이 <strong>[공 ${victim.num}]</strong> ${randMeme} <span style="color:#94a3b8;">(${aliveCount}명 생존)</span>`;
+      } else {
+        msg.innerHTML = `💨 <strong>[공 ${victim.num}]</strong> 님이 탈락했습니다! <span style="color:#94a3b8;">(${aliveCount}명 생존)</span>`;
+      }
+
+      feed.insertBefore(msg, feed.firstChild);
+      if (feed.children.length > 25) feed.removeChild(feed.lastChild);
+
+      updateBattleUI();
+    }
+
+    function spawnParticles(x, y, color, count) {
+      for (let i = 0; i < count; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const spd = 1 + Math.random() * 4;
+        particles.push({
+          x, y,
+          vx: Math.cos(ang) * spd,
+          vy: Math.sin(ang) * spd,
+          color,
+          r: 2 + Math.random() * 2,
+          life: 1.0
         });
-      } catch (err) {
-        console.error("Pairs load error:", err);
       }
     }
 
-    // Number Pad for Generator
-    function initCustomPad() {
-      const pad = document.getElementById('customPad');
-      pad.innerHTML = '';
-      for (let i = 1; i <= 45; i++) {
-        const btn = document.createElement('button');
-        btn.className = 'pad-btn';
-        btn.textContent = i;
-        btn.id = `pad-btn-${i}`;
-        
-        // 좌클릭: 고정수 토글 (최대 5개)
-        btn.onclick = (e) => {
-          e.preventDefault();
-          if (excludeNumbers.has(i)) {
-            excludeNumbers.delete(i);
-            btn.classList.remove('exclude-selected');
-          }
-          if (fixedNumbers.has(i)) {
-            fixedNumbers.delete(i);
-            btn.classList.remove('fixed-selected');
-          } else {
-            if (fixedNumbers.size >= 5) {
-              alert("고정수는 최대 5개까지 지정할 수 있습니다.");
-              return;
-            }
-            fixedNumbers.add(i);
-            btn.classList.add('fixed-selected');
-          }
-          updatePadLabels();
-        };
+    function updateBattleUI() {
+      document.getElementById('aliveCountText').textContent = `${aliveCount} / 45 (최후 6인까지)`;
+      const pct = Math.max(0, ((aliveCount - 6) / (45 - 6)) * 100);
+      document.getElementById('aliveProgressBar').style.width = `${pct}%`;
 
-        // 우클릭: 제외수 토글
-        btn.oncontextmenu = (e) => {
-          e.preventDefault();
-          if (fixedNumbers.has(i)) {
-            fixedNumbers.delete(i);
-            btn.classList.remove('fixed-selected');
-          }
-          if (excludeNumbers.has(i)) {
-            excludeNumbers.delete(i);
-            btn.classList.remove('exclude-selected');
-          } else {
-            excludeNumbers.add(i);
-            btn.classList.add('exclude-selected');
-          }
-          updatePadLabels();
-        };
+      const zoneRatio = safeRadius / INITIAL_RADIUS;
+      let zoneStatus = 'Lv.1 (평온)';
+      if (zoneRatio < 0.45) zoneStatus = 'Lv.4 (극도의 혼돈!)';
+      else if (zoneRatio < 0.65) zoneStatus = 'Lv.3 (사투 벌어짐)';
+      else if (zoneRatio < 0.85) zoneStatus = 'Lv.2 (자기장 수축)';
+      document.getElementById('safeZoneLabel').innerHTML = `자기장: <span style="color:#ec4899; font-weight:700;">${zoneStatus}</span>`;
+    }
 
-        pad.appendChild(btn);
+    function drawBattleFrame() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 1. 아레나 외곽 원
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(ARENA_CENTER, ARENA_CENTER, INITIAL_RADIUS, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(99, 102, 241, 0.4)';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      // 위험 지대(자기장 밖) 붉은 안개
+      ctx.beginPath();
+      ctx.arc(ARENA_CENTER, ARENA_CENTER, INITIAL_RADIUS, 0, Math.PI * 2);
+      ctx.arc(ARENA_CENTER, ARENA_CENTER, safeRadius, 0, Math.PI * 2, true);
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.18)';
+      ctx.fill();
+
+      // 2. 안전 지대(자기장 테두리)
+      ctx.beginPath();
+      ctx.arc(ARENA_CENTER, ARENA_CENTER, safeRadius, 0, Math.PI * 2);
+      ctx.strokeStyle = '#ec4899';
+      ctx.lineWidth = 3;
+      ctx.setLineDash([8, 6]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+
+      // 3. 생존 공 그리기
+      for (let b of battleBalls) {
+        if (!b.alive) continue;
+
+        ctx.save();
+        // 공 본체
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fillStyle = b.color;
+        ctx.shadowColor = 'rgba(0,0,0,0.5)';
+        ctx.shadowBlur = 6;
+        ctx.fill();
+
+        // 3D 광택 하이라이트
+        ctx.beginPath();
+        ctx.arc(b.x - b.r*0.3, b.y - b.r*0.3, b.r*0.35, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.fill();
+
+        // 번호 텍스트
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 11px Outfit, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.shadowColor = '#000';
+        ctx.shadowBlur = 3;
+        ctx.fillText(b.num, b.x, b.y - 1);
+
+        // HP 미니 바
+        const hpWidth = b.r * 1.6;
+        const hpHeight = 2.5;
+        const curHpWidth = Math.max(0, (b.hp / 100) * hpWidth);
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.fillRect(b.x - hpWidth/2, b.y + b.r + 2, hpWidth, hpHeight);
+        ctx.fillStyle = b.hp > 50 ? '#10b981' : (b.hp > 25 ? '#f59e0b' : '#ef4444');
+        ctx.fillRect(b.x - hpWidth/2, b.y + b.r + 2, curHpWidth, hpHeight);
+
+        ctx.restore();
+      }
+
+      // 4. 충돌/폭발 파티클
+      for (let p of particles) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.life;
+        ctx.fill();
+        ctx.restore();
       }
     }
 
-    function updatePadLabels() {
-      document.getElementById('fixedListText').textContent = fixedNumbers.size > 0 ? Array.from(fixedNumbers).sort((a,b)=>a-b).join(', ') : '없음';
-      document.getElementById('excludeListText').textContent = excludeNumbers.size > 0 ? Array.from(excludeNumbers).sort((a,b)=>a-b).join(', ') : '없음';
+    function checkBattleOver() {
+      if (aliveCount <= 6) {
+        pauseBattle();
+        const survivors = battleBalls.filter(b => b.alive).map(b => b.num).sort((a,b)=>a-b);
+        latestSurvivors = survivors;
+        playSound('win');
+
+        // Confetti explosion 🎉
+        if (typeof confetti === 'function') {
+          confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        }
+
+        // Show survivors banner
+        const banner = document.getElementById('survivorsBanner');
+        banner.style.display = 'block';
+
+        const row = document.getElementById('survivorBallsRow');
+        row.innerHTML = '';
+        survivors.forEach(n => {
+          row.appendChild(createBallElement(n, 'lg'));
+        });
+
+        // Update receipt modal numbers
+        document.getElementById('receiptNumbers').textContent = survivors.map(n => String(n).padStart(2,'0')).join('  ');
+        const now = new Date();
+        document.getElementById('receiptDate').textContent = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
+      }
     }
 
-    function resetPad() {
-      fixedNumbers.clear();
-      excludeNumbers.clear();
-      document.querySelectorAll('#customPad .pad-btn').forEach(b => {
-        b.classList.remove('fixed-selected', 'exclude-selected');
+    function copySurvivorNumbers() {
+      if (!latestSurvivors.length) return;
+      const sStr = latestSurvivors.map(n => String(n).padStart(2, '0')).join(', ');
+      const text = `🥊 [로또 45구 배틀로얄 최후의 생존 6인]
+번호: ${sStr}
+(45개 공의 육탄전 끝에 살아남은 진짜 운빨 번호!)
+https://onnebang.github.io/lotto-analyzer/`;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("카카오톡 공유용 번호가 복사되었습니다!");
       });
-      updatePadLabels();
     }
 
-    // Standalone Client-side Engine for GitHub Pages / Static Hosting
+    function openReceiptModal() {
+      document.getElementById('receiptModal').classList.add('open');
+    }
+
+    function closeReceiptModal(e) {
+      document.getElementById('receiptModal').classList.remove('open');
+    }
+
+    function copyReceiptText() {
+      const sStr = latestSurvivors.map(n => String(n).padStart(2, '0')).join(', ');
+      const text = `========================================
+     🙏 1등 당첨 기원 조상님 영수증 🙏
+========================================
+[발행] 대한민국 운빨 총본산
+[인증] 45:1 서바이벌 배틀로얄 승자
+[추천 번호] ${sStr}
+----------------------------------------
+[필수 준수 사항]
+1. 사직서는 통장에 돈 꽂히기 전까지 숨기기
+2. 아는 누나에게 소고기 쏘기 (민법상 불복 불가)
+3. 월요일 출근 때 혼자 미소 짓지 않기 (들킴 방지)
+----------------------------------------
+조상님 曰: "이번엔 너다, 믿고 가라."
+========================================`;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("영수증 부적 텍스트가 클립보드에 복사되었습니다!");
+      });
+    }
+
+    // =========================================================
+    // STANDALONE CLIENT-SIDE & FASTAPI INTEGRATION
+    // =========================================================
     let isStaticMode = false;
     let staticRecords = [];
     let staticWeights = [];
@@ -1109,7 +1749,6 @@
         staticRecords = await res.json();
         isStaticMode = true;
         
-        // 1. Counts & Weights
         let totalCount = 0;
         for (let i = 1; i <= 45; i++) staticNumCounts[i] = 0;
         
@@ -1126,7 +1765,6 @@
           staticWeights.push((staticNumCounts[i] || 0) / totalCount);
         }
 
-        // 2. Cold Ranking
         const latestRound = staticRecords[staticRecords.length - 1].round;
         const lastSeen = {};
         for (let i = 1; i <= 45; i++) lastSeen[i] = 0;
@@ -1178,12 +1816,10 @@
       if (odds === 0 || odds === 6) return false;
       if (lows === 0 || lows === 6) return false;
 
-      // 3 consecutive
       for (let i = 0; i < nums.length - 2; i++) {
         if (nums[i] + 1 === nums[i+1] && nums[i+1] + 1 === nums[i+2]) return false;
       }
 
-      // 3 same tail
       const tails = {};
       for (let n of nums) {
         const t = n % 10;
@@ -1191,9 +1827,7 @@
         if (tails[t] >= 3) return false;
       }
 
-      // AC
       if (calculateJsAC(nums) < 7) return false;
-
       return true;
     }
 
@@ -1228,14 +1862,12 @@
         if (!excludeSet.has(i)) pool.push(i);
       }
 
-      // Hot pool
       const recentCounts = {};
       const recent10 = staticRecords.slice(-10);
       recent10.forEach(r => r.numbers.forEach(n => recentCounts[n] = (recentCounts[n]||0) + 1));
       const hotPool = Object.keys(recentCounts).map(Number).filter(n => pool.includes(n) && !fixedSet.has(n));
       hotPool.sort((a,b)=>recentCounts[b] - recentCounts[a]);
 
-      // Cold pool
       const coldPool = staticColdRanking.map(x=>x.number).filter(n => pool.includes(n) && !fixedSet.has(n));
 
       const results = [];
@@ -1288,7 +1920,6 @@
       return results;
     }
 
-    // Initial Load (Auto-detect Backend or Static Mode)
     async function loadSummary() {
       try {
         const res = await fetch('/api/summary');
@@ -1296,15 +1927,12 @@
         const data = await res.json();
         renderSummaryUI(data);
       } catch (err) {
-        console.warn("Backend API not reachable, switching to Standalone Static Mode...", err);
+        console.warn("Using Standalone Client Mode...", err);
         const ok = await initStaticEngine();
         if (ok) {
           const lat = staticRecords[staticRecords.length - 1];
           const sortedCounts = Object.entries(staticNumCounts).map(([k, v]) => ({ number: Number(k), count: v, rate: (v / staticRecords.length * 100).toFixed(1) }));
           sortedCounts.sort((a,b)=>b.count - a.count);
-
-          const sums = staticRecords.map(r => r.numbers.reduce((a,b)=>a+b, 0));
-          const meanS = (sums.reduce((a,b)=>a+b,0)/sums.length);
 
           const mockSummary = {
             total_rounds: staticRecords.length,
@@ -1511,7 +2139,6 @@
       updatePadLabels();
     }
 
-    // Strategy & Games Selection
     function selectStrategy(strategy, el) {
       currentStrategy = strategy;
       document.querySelectorAll('.strategy-card').forEach(c => c.classList.remove('selected'));
@@ -1528,7 +2155,6 @@
       el.classList.add('btn-primary');
     }
 
-    // Generate Numbers
     let generatedGamesData = [];
     async function generateNumbers() {
       const container = document.getElementById('ticketRows');
@@ -1549,12 +2175,10 @@
           const data = await res.json();
           generatedGamesData = data.games;
         } else {
-          // Client-side JS generator
           generatedGamesData = generateJsGames(currentGameCount, currentStrategy, Array.from(fixedNumbers), Array.from(excludeNumbers));
         }
         renderTicketGames(generatedGamesData);
       } catch (err) {
-        // Fallback to JS generator if API request failed
         generatedGamesData = generateJsGames(currentGameCount, currentStrategy, Array.from(fixedNumbers), Array.from(excludeNumbers));
         renderTicketGames(generatedGamesData);
       }
@@ -1602,11 +2226,13 @@
         return;
       }
       const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'];
-      let text = "🎰 [로또 6/45 AI 스마트 추천 조합]\n";
+      let text = `🎰 [로또 6/45 AI 스마트 추천 조합]
+`;
       generatedGamesData.forEach((g, idx) => {
         const letter = letters[idx % letters.length] || `${idx+1}`;
         const numsStr = g.numbers.map(n => String(n).padStart(2, '0')).join(', ');
-        text += `${letter} 게임: ${numsStr} (총합: ${g.sum}, AC: ${g.ac})\n`;
+        text += `${letter} 게임: ${numsStr} (총합: ${g.sum}, AC: ${g.ac})
+`;
       });
       navigator.clipboard.writeText(text).then(() => {
         alert("클립보드에 전체 조합이 복사되었습니다!");
@@ -1668,7 +2294,6 @@
           });
           data = await res.json();
         } else {
-          // JS Backtest
           const userArr = Array.from(backtestNumbers);
           const counts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
           let totalPrize = 0;
@@ -1872,7 +2497,8 @@
       await loadSummary();
       initCustomPad();
       initBacktestPad();
-      generateNumbers(); // Auto-generate 5 games on start
+      initBattleBalls();
+      generateNumbers();
     });
   </script>
 </body>
