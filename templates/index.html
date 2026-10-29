@@ -846,6 +846,65 @@
       gap: 0.5rem;
     }
 
+
+    /* ========================================================= */
+    /* 🎰 CR 777 FEVER 빠칭코 네온 스타일 (PACHINKO THEME) */
+    /* ========================================================= */
+    .pachinko-cabinet-box {
+      background: radial-gradient(circle at 50% 30%, #1e112a 0%, #0d0714 80%, #050208 100%);
+      border: 3px solid #ec4899;
+      box-shadow: 0 0 35px rgba(236, 72, 153, 0.4), inset 0 0 30px rgba(236, 72, 153, 0.2);
+      border-radius: 20px;
+      padding: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .pachinko-chucker-lamp {
+      animation: chucker-glow 1s infinite alternate;
+    }
+    @keyframes chucker-glow {
+      from { box-shadow: 0 0 6px #f59e0b; }
+      to { box-shadow: 0 0 20px #ef4444, 0 0 30px #f59e0b; }
+    }
+    .pachinko-fever-text {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      background: linear-gradient(135deg, #fef08a, #f59e0b, #ef4444, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbow-shine 2s infinite linear;
+    }
+    @keyframes rainbow-shine {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+    .pachinko-power-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 10px;
+      border-radius: 5px;
+      background: linear-gradient(90deg, #06b6d4, #10b981 40%, #f59e0b 75%, #ef4444 100%);
+      outline: none;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+    }
+    .pachinko-power-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid #ec4899;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(236, 72, 153, 0.8);
+      transition: transform 0.1s ease;
+    }
+    .pachinko-power-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
 </style>
 </head>
 <body>
@@ -905,6 +964,9 @@
       </button>
       <button class="tab-btn" onclick="switchTab('derby')">
         <span style="font-size:1.15rem;">🏇</span> 45구 로또 그랑프리 경마 <span class="tab-badge" style="background:linear-gradient(135deg, #f59e0b, #ef4444);">HOT</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('pachinko')">
+        <span style="font-size:1.15rem;">🎰</span> CR 777 빠칭코 <span class="tab-badge" style="background:linear-gradient(135deg, #ec4899, #f43f5e); animation: pulse 1.5s infinite;">FEVER</span>
       </button>
       <button class="tab-btn" onclick="switchTab('battle')">
         <span style="font-size:1.15rem;">🥊</span> 45구 배틀로얄 서바이벌 <span class="tab-badge">인기</span>
@@ -1099,6 +1161,125 @@
               </button>
               <button class="btn btn-outline" style="background:#fff; color:#111; font-weight:700;" onclick="openDerbyReceiptModal()">
                 <i class="fa-solid fa-receipt"></i> 1등 적중 마권 영수증
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- TAB: CR 777 FEVER 빠칭코 게임 (NEW PACHINKO)   -->
+    <!-- ============================================== -->
+    <div id="tab-pachinko" class="tab-content">
+      <div class="battle-layout">
+        <!-- Canvas Arena Box -->
+        <div class="arena-box pachinko-cabinet-box">
+          <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-bottom:0.5rem; padding:0 0.5rem;">
+            <div style="font-size:0.95rem; font-weight:800; color:#f8fafc; display:flex; align-items:center; gap:0.4rem;">
+              <span class="variety-tag" style="background:#ec4899; border-color:#f472b6;">大当り</span> CR 777 FEVER 빠칭코 네온
+            </div>
+            <div style="font-size:0.85rem; color:#f472b6; display:flex; align-items:center; gap:0.5rem;">
+              <span>보류(保留):</span>
+              <span id="pachinkoHoldIndicators" style="font-size:1rem; letter-spacing:3px; color:#38bdf8;">○ ○ ○ ○</span>
+            </div>
+          </div>
+
+          <!-- Pachinko Live Ticker -->
+          <div class="variety-ticker" style="background:linear-gradient(90deg, #831843, #701a75 50%, #1e1b4b 100%); border-color:#ec4899; margin-bottom:0.6rem; width:100%;">
+            <span class="variety-tag" style="background:#f43f5e;">실황</span>
+            <span id="pachinkoCommentaryText" style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+              발사 핸들을 돌려 쇠구슬을 쏘세요! 중앙 스타트 차커에 입상하면 LCD 슬롯 회전 시작!
+            </span>
+          </div>
+
+          <!-- Canvas (540 x 760) -->
+          <canvas id="pachinkoCanvas" width="540" height="760" style="max-width:100%; height:auto; border-radius:14px; background:#0c0714; box-shadow:0 0 25px rgba(0,0,0,0.7); cursor:crosshair;"></canvas>
+        </div>
+
+        <!-- Sidebar / Controls -->
+        <div class="battle-sidebar">
+          <div class="battle-controls-card" style="border-color:rgba(236,72,153,0.4); box-shadow:0 0 25px rgba(236,72,153,0.15);">
+            <h3 style="font-size:1.1rem; font-weight:800; color:#fff; margin-bottom:0.6rem; display:flex; align-items:center; gap:0.5rem;">
+              <i class="fa-solid fa-gem" style="color:#ec4899;"></i> CR 777 빠칭코 조작 핸들
+            </h3>
+            <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:1rem; line-height:1.5;">
+              은색 쇠구슬을 발사해 <strong>중앙 스타트 차커(START)</strong>에 넣으면 3릴 LCD 슬롯이 회전합니다! <strong>777 피버 대당첨(大当り)</strong> 시 하단 어태커가 열리며 황금 로또 6구가 전격 당첨됩니다!
+            </p>
+
+            <!-- Power Gauge Slider -->
+            <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:0.9rem; margin-bottom:1rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; font-size:0.84rem; font-weight:700;">
+                <span style="color:#cbd5e1;"><i class="fa-solid fa-gauge-high" style="color:#ec4899;"></i> 발사 파워 (Power):</span>
+                <span style="color:#f472b6; font-family:'Outfit'; font-size:1.05rem;" id="pachinkoPowerText">75%</span>
+              </div>
+              <input type="range" min="40" max="100" value="75" class="pachinko-power-slider" id="pachinkoPowerSlider" oninput="updatePachinkoPower(this.value)">
+              <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text-muted); margin-top:0.3rem;">
+                <span>약 (좌측 유도)</span>
+                <span>추천 (차커 집중)</span>
+                <span>강 (우측 레일 터보)</span>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">
+              <button class="btn btn-primary" style="flex:1; background:linear-gradient(135deg, #ec4899, #be185d); border-color:#be185d; box-shadow:0 0 15px rgba(236,72,153,0.4);" onclick="shootPachinkoBurst(100)">
+                <i class="fa-solid fa-meteor"></i> 100연타 폭풍 발사!
+              </button>
+              <button class="btn btn-outline" onclick="shootPachinkoSingle()">
+                <i class="fa-solid fa-play"></i> 1발 발사
+              </button>
+              <button class="btn btn-outline" id="btnPachinkoAuto" onclick="togglePachinkoAutoFire()">
+                <i class="fa-solid fa-rotate"></i> 오토 연사: OFF
+              </button>
+              <button class="btn btn-outline" style="border-color:#f59e0b; color:#fef08a;" onclick="shootPachinkoChuckerDirect()">
+                <i class="fa-solid fa-crosshairs"></i> 차커 직행슛!
+              </button>
+              <button class="btn btn-outline" onclick="resetPachinko()">
+                <i class="fa-solid fa-rotate-right"></i> 다시 하기
+              </button>
+              <button class="btn btn-outline" style="background:rgba(236,72,153,0.15); border-color:#ec4899; color:#f472b6;" onclick="skipPachinkoFever()">
+                <i class="fa-solid fa-forward-fast"></i> 즉시 777 피버 (스킵)
+              </button>
+            </div>
+
+            <!-- Live 6 Lotto Balls Slot Preview -->
+            <div style="background:rgba(255,255,255,0.03); padding:0.9rem; border-radius:12px; margin-bottom:0.8rem; border:1px solid rgba(255,255,255,0.06);">
+              <div style="font-size:0.84rem; font-weight:700; color:#cbd5e1; margin-bottom:0.6rem; display:flex; justify-content:space-between;">
+                <span>🎰 777 피버 획득 골든 6구:</span>
+                <span style="color:#ec4899; font-family:'Outfit';" id="pachinkoStatusText">0 / 6 획득</span>
+              </div>
+              <div style="display:flex; gap:0.4rem; justify-content:space-between;" id="pachinkoBallsPreview">
+                <div class="slot-preview-box" id="pachinko-spb-0">1구 ?</div>
+                <div class="slot-preview-box" id="pachinko-spb-1">2구 ?</div>
+                <div class="slot-preview-box" id="pachinko-spb-2">3구 ?</div>
+                <div class="slot-preview-box" id="pachinko-spb-3">4구 ?</div>
+                <div class="slot-preview-box" id="pachinko-spb-4">5구 ?</div>
+                <div class="slot-preview-box" id="pachinko-spb-5">6구 ?</div>
+              </div>
+            </div>
+
+            <!-- Parlor Commentary -->
+            <div style="background:rgba(15,23,42,0.7); border:1px solid var(--border-color); border-radius:12px; padding:0.85rem; font-size:0.82rem; color:var(--text-muted); line-height:1.5;" id="pachinkoParlorTip">
+              💡 <strong>파칭코 꿀팁:</strong> 좌우 날개 튤립에 들어가면 구슬이 튀며 점수가 오르고, 중앙 스타트 차커에 입상하면 최대 4개까지 보류 구슬이 충전되어 슬롯이 연속 회전합니다!
+            </div>
+          </div>
+
+          <!-- Pachinko Winner Banner -->
+          <div class="survivors-banner" id="pachinkoWinnerBanner" style="display:none; border-color:#ec4899; box-shadow:0 0 30px rgba(236,72,153,0.5); background:linear-gradient(135deg, rgba(236,72,153,0.22), rgba(168,85,247,0.25));">
+            <h3 style="font-size:1.25rem; font-weight:800; color:#f472b6; margin-bottom:0.3rem;">
+              🎉 大当り!! 777 FEVER 파칭코 대박 6구 확정!
+            </h3>
+            <p style="font-size:0.82rem; color:#f8fafc; margin-bottom:0.8rem;">
+              화려한 777 슬롯 회전을 뚫고 하단 대형 어태커에서 쏟아져 나온 행운의 황금 6구!
+            </p>
+            <div class="balls-row" id="pachinkoBallsRow" style="justify-content:center; margin-bottom:1rem;"></div>
+            <div style="display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;">
+              <button class="btn btn-primary" style="background:#ec4899; border-color:#ec4899; color:#fff; font-weight:800;" onclick="copyPachinkoNumbers()">
+                <i class="fa-solid fa-copy"></i> 카톡 번호 복사
+              </button>
+              <button class="btn btn-outline" style="background:#fff; color:#111; font-weight:700;" onclick="openPachinkoReceiptModal()">
+                <i class="fa-solid fa-receipt"></i> TUC 경품교환소 영수증 부적
               </button>
             </div>
           </div>
@@ -1443,6 +1624,48 @@
   </main>
 
   
+  <!-- Pachinko TUC Lucky Receipt Modal -->
+  <div class="modal-overlay" id="pachinkoReceiptModal" onclick="closePachinkoReceiptModal(event)">
+    <div class="receipt-paper" onclick="event.stopPropagation()">
+      <div style="text-align:center; font-weight:800; font-size:1.15rem; border-bottom:2px dashed #000; padding-bottom:0.6rem; margin-bottom:0.8rem;">
+        🎰 CR 777 FEVER パチンコ 大当り 景品交換証 🎰
+      </div>
+      <div style="font-size:0.78rem; line-height:1.5; margin-bottom:0.8rem;">
+        <div>[발행점] 도쿄 신주쿠 가부키초 럭키 파칭코 홀</div>
+        <div>[기종명] CR 超絶爆笑 로또 6/45 FEVER 777</div>
+        <div>[일자] <span id="pachinkoReceiptDate">2026.10.29</span></div>
+        <div>[상태] <span id="pachinkoReceiptStatus" style="color:#ec4899; font-weight:800;">大当り 確変 (대당첨 확변 잭팟 돌입!)</span></div>
+        <div>[획득구수] <span style="font-weight:700;">77,777개 (특수 금괴 경품 교환권)</span></div>
+      </div>
+      <div style="border-top:1px dashed #444; border-bottom:1px dashed #444; padding:0.8rem 0; margin-bottom:0.8rem; text-align:center;">
+        <div style="font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">[777 FEVER 황금 로또 6구]</div>
+        <div style="font-size:1.4rem; font-weight:800; letter-spacing:2px; color:#ec4899;" id="pachinkoReceiptNumbers">
+          07 14 21 28 35 42
+        </div>
+      </div>
+      <div style="font-size:0.75rem; line-height:1.6; margin-bottom:1rem;">
+        <div style="font-weight:700; margin-bottom:0.2rem;">[※ 파칭코 대박 후 TUC 경품교환소 필수 수칙]</div>
+        <div id="pachinkoReceiptRules">
+          <div>1. 뒷골목 TUC 교환소 아줌마한테 90도 폴더 인사 금지 (자연스럽게 금괴 수령)</div>
+          <div>2. 엄마/아빠한테 '나 일본에서 777 피버 터뜨렸어' 자랑하고 전세금 쏴주기</div>
+          <div>3. 언니/동생한테 '이제 네 방 월세는 내가 낸다' 쿨하게 플렉스하기</div>
+          <div>4. 회사 단톡방에 '저 파칭코 프로 전향합니다' 사직서 짤 투척 금지</div>
+        </div>
+      </div>
+      <div style="text-align:center; font-size:0.8rem; font-weight:700; border-top:2px dashed #000; padding-top:0.6rem;" id="pachinkoReceiptQuote">
+        파칭코의 신 曰: "777 피버가 터졌으니 인생도 이제부터 확변(確変) 모드다."
+      </div>
+      <div style="margin-top:1.2rem; display:flex; gap:0.5rem;">
+        <button class="btn btn-primary" style="flex:1; justify-content:center; font-size:0.8rem; background:#ec4899; border-color:#ec4899; color:#fff; font-weight:800;" onclick="copyPachinkoReceiptText()">
+          교환증 텍스트 복사
+        </button>
+        <button class="btn btn-outline" style="color:#000; border-color:#888; font-size:0.8rem;" onclick="closePachinkoReceiptModal()">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Derby Lucky Receipt Modal -->
   <div class="modal-overlay" id="derbyReceiptModal" onclick="closeDerbyReceiptModal(event)">
     <div class="receipt-paper" onclick="event.stopPropagation()">
@@ -1746,6 +1969,65 @@
           g.connect(audioCtx.destination);
           o.start(now);
           o.stop(now + 0.28);
+        } else if (type === 'pachinko_pin') {
+          // 파칭코 쇠구슬 핀 튕김 경쾌한 쇳소리 (Metallic Clink)
+          if (now - lastPegSoundTime < 0.02) return;
+          lastPegSoundTime = now;
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.type = 'triangle';
+          o.frequency.setValueAtTime(1100 + Math.random() * 800, now);
+          g.gain.setValueAtTime(0.045, now);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          o.start(now);
+          o.stop(now + 0.025);
+        } else if (type === 'chucker_in') {
+          // 스타트 차커 입상 띵동 차임 (2-Tone Chime)
+          const notes = [784.00, 1046.50];
+          notes.forEach((f, idx) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.type = 'sine';
+            o.frequency.value = f;
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            const t = now + idx * 0.08;
+            g.gain.setValueAtTime(0.15, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+            o.start(t);
+            o.stop(t + 0.22);
+          });
+        } else if (type === 'reach_alert') {
+          // 격열 리치 긴장감 사이렌 & 심장박동 (REACH Siren)
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.type = 'sawtooth';
+          o.frequency.setValueAtTime(440, now);
+          o.frequency.linearRampToValueAtTime(880, now + 0.35);
+          g.gain.setValueAtTime(0.18, now);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          o.start(now);
+          o.stop(now + 0.35);
+        } else if (type === 'fever_fanfare') {
+          // 대당첨 777 FEVER 일렉트로닉 축하 팡파레
+          const feverNotes = [523.25, 659.25, 783.99, 1046.50, 1318.5, 1567.98, 2093.00];
+          feverNotes.forEach((f, idx) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.type = 'square';
+            o.frequency.value = f;
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            const t = now + idx * 0.07;
+            g.gain.setValueAtTime(0.12, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+            o.start(t);
+            o.stop(t + 0.28);
+          });
         } else if (type === 'vroom') {
           // 슈퍼카 굉음 배기음 (Engine Rev)
           const o = audioCtx.createOscillator();
@@ -1841,6 +2123,10 @@
       } else if (tabId === 'derby') {
         if (!derbyRunning) {
           drawDerbyFrame();
+        }
+      } else if (tabId === 'pachinko') {
+        if (!pachinkoRunning) {
+          drawPachinkoFrame();
         }
       }
     }
@@ -2695,6 +2981,12 @@ https://mwon001.github.io/lotto-number/`;
           '그랑프리의 신 曰: "인생은 1,200m 더비, 네 번호마가 가장 먼저 결승선을 넘었다."',
           '과천 명사수 曰: "99,999배 대박 마권의 주인공은 바로 너다."',
           '경마의 신 曰: "부모님께 큰절 올리고 당첨금으로 소고기 파티 열어라."'
+        ],
+        pachinko: [
+          '파칭코의 신 曰: "777 피버가 터졌으니 인생도 이제부터 확변(確変) 모드다."',
+          '카부키초 전설 曰: "뒷골목 TUC 교환소에서 금괴 바꿀 때 침착함을 잃지 마라."',
+          'FEVER 마스터 曰: "은색 쇠구슬 77,777개의 축복이 이번 주 로또 1등으로 이어진다."',
+          '파칭코의 신 曰: "대박의 기운을 가족과 나누면 다음 주에도 777이 터진다."'
         ]
       }
     };
@@ -3662,6 +3954,993 @@ ${currentDerbyReceiptQuote}
         alert("마권 영수증 텍스트가 클립보드에 복사되었습니다!");
       });
     }
+
+
+    // =========================================================
+    // 🎰 CR 777 FEVER 빠칭코 물리 엔진 & 슬롯 연출 (CANVAS 2D)
+    // =========================================================
+    const pkCvs = document.getElementById('pachinkoCanvas');
+    const pkCtx = pkCvs ? pkCvs.getContext('2d') : null;
+
+    let pachinkoRunning = false;
+    let pachinkoAnimationId = null;
+    let pachinkoAutoInterval = null;
+    let pachinkoAutoFire = false;
+    let pachinkoPower = 75; // 40 to 100
+    let pachinkoScore = 0;
+
+    let pachinkoBalls = [];
+    let pachinkoPegs = [];
+    let pachinkoParticles = [];
+    let pachinkoHoldCount = 0; // 0 ~ 4 reserved spins
+
+    // Tulips
+    let pachinkoLeftTulip = { x: 95, y: 430, open: false, timer: 0 };
+    let pachinkoRightTulip = { x: 445, y: 430, open: false, timer: 0 };
+
+    // LCD Digital Slot Engine
+    let pachinkoReels = [7, 7, 7];
+    let pachinkoReelAngles = [0, 0, 0];
+    let pachinkoReelSpeeds = [0, 0, 0];
+    let pachinkoSlotState = 'IDLE'; // IDLE, SPINNING, REACH, FEVER
+    let pachinkoSlotTimer = 0;
+    let pachinkoReachTension = 0;
+    let pachinkoTargetNumbers = [7, 7, 7];
+
+    // Attacker & 6 Lotto Balls
+    let pachinkoAttackerOpen = false;
+    let pachinkoAttackerTimer = 0;
+    let pachinkoFeverBalls = []; // 6 extracted lotto balls
+    let pachinkoWinningPool = [];
+    let pachinkoBallExtractTimer = 0;
+    let latestPachinkoWinners = [];
+
+    let currentPachinkoReceiptRules = [];
+    let currentPachinkoReceiptQuote = '파칭코의 신 曰: "777 피버가 터졌으니 인생도 이제부터 확변(確変) 모드다."';
+
+    function initPachinkoBoard() {
+      pachinkoBalls = [];
+      pachinkoParticles = [];
+      pachinkoPegs = [];
+      pachinkoHoldCount = 0;
+      pachinkoSlotState = 'IDLE';
+      pachinkoReels = [7, 7, 7];
+      pachinkoAttackerOpen = false;
+      pachinkoFeverBalls = [];
+      pachinkoWinningPool = [];
+      pachinkoScore = 0;
+
+      // Update hold UI
+      updatePachinkoHoldUI();
+      updatePachinkoSlotPreview();
+
+      // Generate Pins (釘, Brass Nails)
+      // Top arch deflectors
+      for (let i = 0; i < 9; i++) {
+        const ang = Math.PI * 0.55 + (i / 8) * (Math.PI * 0.9);
+        pachinkoPegs.push({
+          x: 270 + Math.cos(ang) * 230,
+          y: 190 + Math.sin(ang) * 230,
+          r: 3.5,
+          color: '#fbbf24',
+          flash: 0
+        });
+      }
+
+      // Upper guide clusters (Left & Right of LCD)
+      // Left cluster
+      for (let r = 0; r < 5; r++) {
+        for (let c = 0; c <= r; c++) {
+          pachinkoPegs.push({
+            x: 65 + c * 18 - (r * 9),
+            y: 200 + r * 22,
+            r: 3.2,
+            color: '#facc15',
+            flash: 0
+          });
+        }
+      }
+      // Right cluster
+      for (let r = 0; r < 5; r++) {
+        for (let c = 0; c <= r; c++) {
+          pachinkoPegs.push({
+            x: 475 - c * 18 + (r * 9),
+            y: 200 + r * 22,
+            r: 3.2,
+            color: '#facc15',
+            flash: 0
+          });
+        }
+      }
+
+      // Mid-field diamond pins around Start Chucker (y: 340 to 520)
+      for (let row = 0; row < 7; row++) {
+        const count = row % 2 === 0 ? 12 : 11;
+        const startX = row % 2 === 0 ? 70 : 85;
+        for (let col = 0; col < count; col++) {
+          const px = startX + col * 32;
+          const py = 330 + row * 24;
+          // Don't place pin right inside Start Chucker mouth (x: 245 ~ 295, y: 340 ~ 375)
+          if (px > 240 && px < 300 && py > 335 && py < 380) continue;
+          // Don't place inside tulips
+          if (Math.hypot(px - 95, py - 430) < 22 || Math.hypot(px - 445, py - 430) < 22) continue;
+          pachinkoPegs.push({
+            x: px + (Math.random() - 0.5) * 2,
+            y: py,
+            r: 3.2,
+            color: '#fde047',
+            flash: 0
+          });
+        }
+      }
+
+      // Lower guide funnels toward Attacker (y: 520 to 630)
+      for (let row = 0; row < 5; row++) {
+        const count = 10 - row;
+        const spacing = 36;
+        const startX = 270 - ((count - 1) * spacing) / 2;
+        for (let c = 0; c < count; c++) {
+          const px = startX + c * spacing;
+          const py = 520 + row * 24;
+          if (px > 190 && px < 350 && py > 610) continue; // Attacker mouth
+          pachinkoPegs.push({
+            x: px,
+            y: py,
+            r: 3.2,
+            color: '#fbbf24',
+            flash: 0
+          });
+        }
+      }
+      drawPachinkoFrame();
+    }
+
+    function updatePachinkoPower(val) {
+      pachinkoPower = parseInt(val) || 75;
+      const el = document.getElementById('pachinkoPowerText');
+      if (el) el.textContent = pachinkoPower + '%';
+    }
+
+    function shootPachinkoSingle() {
+      if (pachinkoBalls.length > 120) return; // Prevent lag
+      const powerFactor = pachinkoPower / 100;
+      // Launch from bottom right track (x: 512, y: 720)
+      const initialVy = -19 * (0.8 + powerFactor * 0.45);
+      pachinkoBalls.push({
+        x: 512 + (Math.random() - 0.5) * 4,
+        y: 720,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: initialVy,
+        r: 6.2,
+        state: 'launching', // launching, field, swallowed, out
+        alpha: 1.0,
+        trail: []
+      });
+      playSound('hit');
+      ensurePachinkoLoop();
+    }
+
+    function shootPachinkoBurst(count) {
+      count = count || 100;
+      let fired = 0;
+      const timer = setInterval(() => {
+        if (fired >= count || !document.getElementById('tab-pachinko').classList.contains('active')) {
+          clearInterval(timer);
+          return;
+        }
+        shootPachinkoSingle();
+        fired++;
+      }, 45);
+    }
+
+    function togglePachinkoAutoFire() {
+      pachinkoAutoFire = !pachinkoAutoFire;
+      const btn = document.getElementById('btnPachinkoAuto');
+      if (pachinkoAutoFire) {
+        if (btn) {
+          btn.innerHTML = `<i class="fa-solid fa-pause"></i> 오토 연사: ON`;
+          btn.style.borderColor = '#ec4899';
+          btn.style.color = '#f472b6';
+        }
+        pachinkoAutoInterval = setInterval(() => {
+          if (!pachinkoAutoFire || !document.getElementById('tab-pachinko').classList.contains('active')) {
+            clearInterval(pachinkoAutoInterval);
+            pachinkoAutoFire = false;
+            if (btn) btn.innerHTML = `<i class="fa-solid fa-rotate"></i> 오토 연사: OFF`;
+            return;
+          }
+          shootPachinkoSingle();
+        }, 160);
+      } else {
+        if (btn) {
+          btn.innerHTML = `<i class="fa-solid fa-rotate"></i> 오토 연사: OFF`;
+          btn.style.borderColor = '';
+          btn.style.color = '';
+        }
+        if (pachinkoAutoInterval) clearInterval(pachinkoAutoInterval);
+      }
+    }
+
+    function shootPachinkoChuckerDirect() {
+      // Spawn ball directly aimed straight above Start Chucker
+      pachinkoBalls.push({
+        x: 270 + (Math.random() - 0.5) * 6,
+        y: 310,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: 1.8,
+        r: 6.2,
+        state: 'field',
+        alpha: 1.0,
+        trail: []
+      });
+      playSound('hit');
+      ensurePachinkoLoop();
+    }
+
+    function updatePachinkoHoldUI() {
+      const el = document.getElementById('pachinkoHoldIndicators');
+      if (!el) return;
+      let dots = '';
+      for (let i = 0; i < 4; i++) {
+        dots += (i < pachinkoHoldCount ? '● ' : '○ ');
+      }
+      el.textContent = dots.trim();
+      el.style.color = pachinkoHoldCount > 0 ? '#38bdf8' : '#94a3b8';
+    }
+
+    function updatePachinkoSlotPreview() {
+      const statusEl = document.getElementById('pachinkoStatusText');
+      if (statusEl) statusEl.textContent = `${pachinkoFeverBalls.length} / 6 획득`;
+
+      for (let i = 0; i < 6; i++) {
+        const box = document.getElementById(`pachinko-spb-${i}`);
+        if (!box) continue;
+        if (i < pachinkoFeverBalls.length) {
+          const num = pachinkoFeverBalls[i];
+          box.textContent = `${i + 1}구: ${num}`;
+          box.className = `slot-preview-box filled`;
+          box.style.borderColor = '#ec4899';
+          box.style.color = '#fff';
+        } else {
+          box.textContent = `${i + 1}구 ?`;
+          box.className = 'slot-preview-box';
+          box.style.borderColor = '';
+          box.style.color = '';
+        }
+      }
+    }
+
+    function triggerStartChucker() {
+      playSound('chucker_in');
+      pachinkoScore += 100;
+      spawnPachinkoParticles(270, 350, '#38bdf8', 12);
+
+      const commentEl = document.getElementById('pachinkoCommentaryText');
+      if (commentEl) {
+        commentEl.innerHTML = `🎯 <strong>【START CHUCKER 入賞!】</strong> 중앙 스타트 입상구 명중! 슬롯 추첨 가동!`;
+      }
+
+      if (pachinkoSlotState === 'IDLE') {
+        startLcdSlotSpin();
+      } else {
+        if (pachinkoHoldCount < 4) {
+          pachinkoHoldCount++;
+          updatePachinkoHoldUI();
+        }
+      }
+    }
+
+    function startLcdSlotSpin() {
+      pachinkoSlotState = 'SPINNING';
+      pachinkoSlotTimer = 0;
+
+      // Determine outcome: 25% chance of FEVER (or guaranteed if pool active)
+      const willFever = Math.random() < 0.28 || pachinkoFeverBalls.length > 0;
+      if (willFever) {
+        pachinkoTargetNumbers = [7, 7, 7];
+      } else {
+        const n1 = Math.floor(Math.random() * 9) + 1;
+        const n3 = Math.random() < 0.4 ? n1 : Math.floor(Math.random() * 9) + 1;
+        let n2 = Math.floor(Math.random() * 9) + 1;
+        if (n1 === n3 && n2 === n1) n2 = (n1 % 9) + 1; // avoid accidental 777
+        pachinkoTargetNumbers = [n1, n2, n3];
+      }
+
+      pachinkoReelSpeeds = [12, 14, 16];
+      playSound('slot');
+    }
+
+    function triggerPachinkoFever() {
+      pachinkoSlotState = 'FEVER';
+      pachinkoAttackerOpen = true;
+      pachinkoAttackerTimer = 500; // frames open
+      playSound('fever_fanfare');
+      playSound('jackpot');
+
+      const commentEl = document.getElementById('pachinkoCommentaryText');
+      if (commentEl) {
+        commentEl.innerHTML = `💥 <strong>【大当り!! 777 FEVER!】</strong> 초대박 대당첨 확변 돌입! 하단 대형 어태커 오픈!`;
+      }
+
+      // Generate 6 unique lucky lotto numbers
+      if (pachinkoWinningPool.length === 0) {
+        const nums = [];
+        for (let i = 1; i <= 45; i++) nums.push(i);
+        pachinkoWinningPool = shuffleArray(nums).slice(0, 6);
+      }
+    }
+
+    function skipPachinkoFever() {
+      initPachinkoBoard();
+      pachinkoSlotState = 'FEVER';
+      pachinkoAttackerOpen = true;
+      pachinkoReels = [7, 7, 7];
+
+      const nums = [];
+      for (let i = 1; i <= 45; i++) nums.push(i);
+      pachinkoWinningPool = shuffleArray(nums).slice(0, 6);
+      pachinkoFeverBalls = [...pachinkoWinningPool];
+
+      updatePachinkoSlotPreview();
+      finishPachinkoJackpot();
+      ensurePachinkoLoop();
+    }
+
+    function finishPachinkoJackpot() {
+      pachinkoAttackerOpen = false;
+      latestPachinkoWinners = [...pachinkoFeverBalls].sort((a, b) => a - b);
+
+      const banner = document.getElementById('pachinkoWinnerBanner');
+      const row = document.getElementById('pachinkoBallsRow');
+      if (banner && row) {
+        row.innerHTML = '';
+        latestPachinkoWinners.forEach(num => {
+          row.appendChild(createBallElement(num, 'large'));
+        });
+        banner.style.display = 'block';
+        banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      const commentEl = document.getElementById('pachinkoCommentaryText');
+      if (commentEl) {
+        commentEl.innerHTML = `🎉 <strong>【大当り 完走!】</strong> 777 피버 6개 황금 로또 번호 추출 완료! TUC 교환소에서 영수증을 확인하세요!`;
+      }
+    }
+
+    function spawnPachinkoParticles(x, y, color, count) {
+      for (let i = 0; i < count; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const spd = 1 + Math.random() * 4;
+        pachinkoParticles.push({
+          x,
+          y,
+          vx: Math.cos(ang) * spd,
+          vy: Math.sin(ang) * spd,
+          r: 2 + Math.random() * 2,
+          color,
+          alpha: 1.0,
+          life: 25 + Math.random() * 15
+        });
+      }
+    }
+
+    function ensurePachinkoLoop() {
+      if (!pachinkoRunning) {
+        pachinkoRunning = true;
+        pachinkoAnimationId = requestAnimationFrame(pachinkoLoop);
+      }
+    }
+
+    function resetPachinko() {
+      if (pachinkoAnimationId) cancelAnimationFrame(pachinkoAnimationId);
+      pachinkoRunning = false;
+      if (pachinkoAutoFire) togglePachinkoAutoFire();
+
+      const banner = document.getElementById('pachinkoWinnerBanner');
+      if (banner) banner.style.display = 'none';
+
+      initPachinkoBoard();
+      drawPachinkoFrame();
+    }
+
+    function updatePachinkoPhysics() {
+      // 1. Update LCD Slot State Machine
+      if (pachinkoSlotState === 'SPINNING') {
+        pachinkoSlotTimer++;
+        pachinkoReelAngles[0] += pachinkoReelSpeeds[0];
+        pachinkoReelAngles[1] += pachinkoReelSpeeds[1];
+        pachinkoReelAngles[2] += pachinkoReelSpeeds[2];
+
+        // Reel 1 Stop at t=45
+        if (pachinkoSlotTimer > 45) {
+          pachinkoReelSpeeds[0] = 0;
+          pachinkoReels[0] = pachinkoTargetNumbers[0];
+        }
+        // Reel 3 Stop at t=80
+        if (pachinkoSlotTimer > 80) {
+          pachinkoReelSpeeds[2] = 0;
+          pachinkoReels[2] = pachinkoTargetNumbers[2];
+
+          // Check REACH condition
+          if (pachinkoReels[0] === pachinkoReels[2]) {
+            pachinkoSlotState = 'REACH';
+            pachinkoSlotTimer = 0;
+            playSound('reach_alert');
+            const commentEl = document.getElementById('pachinkoCommentaryText');
+            if (commentEl) commentEl.innerHTML = `🔥 <strong>【激熱 リーチ!!】</strong> 7번 리치 성립! 숨막히는 가운데 릴 감속 연출!!`;
+          } else {
+            // Not reach, center reel stops at t=105
+            pachinkoReelSpeeds[1] = 0;
+            pachinkoReels[1] = pachinkoTargetNumbers[1];
+            pachinkoSlotState = 'IDLE';
+            if (pachinkoHoldCount > 0) {
+              pachinkoHoldCount--;
+              updatePachinkoHoldUI();
+              setTimeout(startLcdSlotSpin, 400);
+            }
+          }
+        }
+      } else if (pachinkoSlotState === 'REACH') {
+        pachinkoSlotTimer++;
+        // Reel 2 spins in slow-motion dramatic clicks
+        pachinkoReelAngles[1] += 2.5;
+        if (pachinkoSlotTimer % 14 === 0) playSound('hit');
+
+        if (pachinkoSlotTimer > 110) {
+          pachinkoReelSpeeds[1] = 0;
+          pachinkoReels[1] = pachinkoTargetNumbers[1];
+
+          if (pachinkoReels[0] === pachinkoReels[1] && pachinkoReels[1] === pachinkoReels[2] && pachinkoReels[0] === 7) {
+            triggerPachinkoFever();
+          } else {
+            pachinkoSlotState = 'IDLE';
+            if (pachinkoHoldCount > 0) {
+              pachinkoHoldCount--;
+              updatePachinkoHoldUI();
+              setTimeout(startLcdSlotSpin, 500);
+            }
+          }
+        }
+      } else if (pachinkoSlotState === 'FEVER') {
+        pachinkoAttackerTimer--;
+        pachinkoBallExtractTimer++;
+
+        // Periodically extract one of the 6 lotto balls into preview
+        if (pachinkoBallExtractTimer > 45 && pachinkoFeverBalls.length < 6) {
+          pachinkoBallExtractTimer = 0;
+          const nextBall = pachinkoWinningPool[pachinkoFeverBalls.length];
+          pachinkoFeverBalls.push(nextBall);
+          playSound('slot');
+          spawnPachinkoParticles(270, 630, '#ec4899', 20);
+          updatePachinkoSlotPreview();
+
+          if (pachinkoFeverBalls.length === 6) {
+            finishPachinkoJackpot();
+          }
+        }
+
+        if (pachinkoAttackerTimer <= 0 && pachinkoFeverBalls.length >= 6) {
+          pachinkoSlotState = 'IDLE';
+        }
+      }
+
+      // 2. Tulips timers
+      if (pachinkoLeftTulip.open) {
+        pachinkoLeftTulip.timer--;
+        if (pachinkoLeftTulip.timer <= 0) pachinkoLeftTulip.open = false;
+      }
+      if (pachinkoRightTulip.open) {
+        pachinkoRightTulip.timer--;
+        if (pachinkoRightTulip.timer <= 0) pachinkoRightTulip.open = false;
+      }
+
+      // 3. Ball Physics & Collisions
+      const gravity = 0.28;
+      for (let i = pachinkoBalls.length - 1; i >= 0; i--) {
+        const b = pachinkoBalls[i];
+
+        if (b.state === 'launching') {
+          b.vy += gravity * 0.4;
+          b.x += b.vx;
+          b.y += b.vy;
+
+          // Rail bounds on the right track
+          if (b.x > 524) { b.x = 524; b.vx *= -0.5; }
+          if (b.x < 500 && b.y > 180) { b.x = 500; b.vx *= -0.5; }
+
+          // Enters top arch (around y < 180)
+          if (b.y <= 180) {
+            // Check arc physics around center (270, 180)
+            const dx = b.x - 270;
+            const dy = b.y - 180;
+            const dist = Math.hypot(dx, dy);
+            if (dist > 236) {
+              const nx = dx / dist;
+              const ny = dy / dist;
+              b.x = 270 + nx * 236;
+              b.y = 180 + ny * 236;
+              // Deflect tangential to circle
+              const dot = b.vx * nx + b.vy * ny;
+              b.vx = (b.vx - 1.6 * dot * nx) * 0.85;
+              b.vy = (b.vy - 1.6 * dot * ny) * 0.85;
+            }
+          }
+
+          // Top left exit into pin field
+          if (b.x < 120 && b.y > 150) {
+            b.state = 'field';
+            b.vx += 1.5; // kick toward center
+          }
+
+          // Reached peak and falling back down launch lane
+          if (b.vy > 0 && b.y > 680 && b.x > 490) {
+            pachinkoBalls.splice(i, 1);
+            continue;
+          }
+        } else if (b.state === 'field') {
+          b.vy += gravity;
+          b.vx *= 0.995;
+          b.vy *= 0.995;
+          b.x += b.vx;
+          b.y += b.vy;
+
+          // Cabinet walls
+          if (b.x < 24) { b.x = 24; b.vx = Math.abs(b.vx) * 0.7; }
+          if (b.x > 500) { b.x = 500; b.vx = -Math.abs(b.vx) * 0.7; }
+
+          // LCD Screen Obstacle (x: 150, y: 110, w: 240, h: 180)
+          if (b.x > 146 && b.x < 394 && b.y > 106 && b.y < 294) {
+            // Push out to closest side
+            if (b.x < 270) { b.x = 144; b.vx = -Math.abs(b.vx) * 0.8 - 0.5; }
+            else { b.x = 396; b.vx = Math.abs(b.vx) * 0.8 + 0.5; }
+          }
+
+          // Peg collisions
+          for (let p of pachinkoPegs) {
+            const dx = b.x - p.x;
+            const dy = b.y - p.y;
+            const dist = Math.hypot(dx, dy);
+            const minDist = b.r + p.r;
+            if (dist < minDist && dist > 0) {
+              const nx = dx / dist;
+              const ny = dy / dist;
+              b.x = p.x + nx * minDist;
+              b.y = p.y + ny * minDist;
+              const dot = b.vx * nx + b.vy * ny;
+              b.vx = (b.vx - 1.7 * dot * nx) * 0.72 + (Math.random() - 0.5) * 0.4;
+              b.vy = (b.vy - 1.7 * dot * ny) * 0.72 + (Math.random() - 0.5) * 0.3;
+              p.flash = 1.0;
+              pachinkoScore += 5;
+              playSound('pachinko_pin');
+              break;
+            }
+          }
+
+          // Start Chucker entrance (x: 270, y: 350, w: 46, h: 26)
+          if (Math.abs(b.x - 270) < 18 && Math.abs(b.y - 350) < 14) {
+            triggerStartChucker();
+            pachinkoBalls.splice(i, 1);
+            continue;
+          }
+
+          // Left Tulip (x: 95, y: 430)
+          if (Math.hypot(b.x - pachinkoLeftTulip.x, b.y - pachinkoLeftTulip.y) < 16) {
+            pachinkoLeftTulip.open = true;
+            pachinkoLeftTulip.timer = 180;
+            pachinkoScore += 50;
+            playSound('slot');
+            spawnPachinkoParticles(pachinkoLeftTulip.x, pachinkoLeftTulip.y, '#f472b6', 8);
+            pachinkoBalls.splice(i, 1);
+            continue;
+          }
+
+          // Right Tulip (x: 445, y: 430)
+          if (Math.hypot(b.x - pachinkoRightTulip.x, b.y - pachinkoRightTulip.y) < 16) {
+            pachinkoRightTulip.open = true;
+            pachinkoRightTulip.timer = 180;
+            pachinkoScore += 50;
+            playSound('slot');
+            spawnPachinkoParticles(pachinkoRightTulip.x, pachinkoRightTulip.y, '#f472b6', 8);
+            pachinkoBalls.splice(i, 1);
+            continue;
+          }
+
+          // Big Attacker (x: 200~340, y: 620~645) when open
+          if (pachinkoAttackerOpen && b.x > 200 && b.x < 340 && b.y > 615 && b.y < 650) {
+            pachinkoScore += 300;
+            playSound('slot');
+            spawnPachinkoParticles(b.x, b.y, '#f59e0b', 10);
+            pachinkoBalls.splice(i, 1);
+            continue;
+          }
+
+          // Out Drain Hole at bottom
+          if (b.y > 750) {
+            pachinkoBalls.splice(i, 1);
+            continue;
+          }
+        }
+      }
+
+      // 4. Particles update
+      for (let i = pachinkoParticles.length - 1; i >= 0; i--) {
+        const pt = pachinkoParticles[i];
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+        pt.life--;
+        pt.alpha = pt.life / 35;
+        if (pt.life <= 0) {
+          pachinkoParticles.splice(i, 1);
+        }
+      }
+    }
+
+    function drawPachinkoFrame() {
+      if (!pkCtx) return;
+      const w = pkCvs.width;
+      const h = pkCvs.height;
+
+      pkCtx.clearRect(0, 0, w, h);
+
+      // 1. Board Background (Curved Acrylic Frame)
+      const bgGrad = pkCtx.createRadialGradient(270, 360, 40, 270, 360, 420);
+      bgGrad.addColorStop(0, '#1c102a');
+      bgGrad.addColorStop(0.7, '#0f0817');
+      bgGrad.addColorStop(1, '#050208');
+      pkCtx.fillStyle = bgGrad;
+      pkCtx.fillRect(0, 0, w, h);
+
+      // 2. Chasing Rainbow Perimeter LED Bezel
+      const nowMs = performance.now() * 0.003;
+      pkCtx.save();
+      pkCtx.lineWidth = 4;
+      for (let i = 0; i < 40; i++) {
+        const ang = (i / 40) * Math.PI * 2;
+        const hue = (i * 9 + nowMs * 80) % 360;
+        pkCtx.strokeStyle = `hsl(${hue}, 90%, 60%)`;
+        pkCtx.beginPath();
+        pkCtx.arc(270 + Math.cos(ang) * 256, 360 + Math.sin(ang) * 350, 3, 0, Math.PI * 2);
+        pkCtx.stroke();
+      }
+      pkCtx.restore();
+
+      // 3. Outer Launch Guide Rails (Right track & Top Arc)
+      pkCtx.save();
+      pkCtx.strokeStyle = '#475569';
+      pkCtx.lineWidth = 3;
+
+      // Right vertical track (x: 500 & x: 526)
+      pkCtx.beginPath();
+      pkCtx.moveTo(500, 750);
+      pkCtx.lineTo(500, 180);
+      pkCtx.moveTo(526, 750);
+      pkCtx.lineTo(526, 180);
+      pkCtx.stroke();
+
+      // Top circular guide arc (centered at 270, 180 with r=236 and r=256)
+      pkCtx.beginPath();
+      pkCtx.arc(270, 180, 236, Math.PI, 0, false);
+      pkCtx.arc(270, 180, 256, Math.PI, 0, false);
+      pkCtx.strokeStyle = '#6366f1';
+      pkCtx.stroke();
+
+      // Deflector rubber at top-left (x: 50, y: 170)
+      pkCtx.fillStyle = '#ef4444';
+      pkCtx.beginPath();
+      pkCtx.arc(50, 175, 12, 0, Math.PI * 2);
+      pkCtx.fill();
+      pkCtx.restore();
+
+      // 4. Center LCD Screen Bezel (x: 150, y: 110, w: 240, h: 180)
+      pkCtx.save();
+      pkCtx.shadowColor = pachinkoSlotState === 'FEVER' ? '#f59e0b' : '#ec4899';
+      pkCtx.shadowBlur = 18;
+      pkCtx.strokeStyle = pachinkoSlotState === 'FEVER' ? '#fbbf24' : '#ec4899';
+      pkCtx.lineWidth = 4;
+      pkCtx.strokeRect(150, 110, 240, 180);
+
+      // Screen Inner Background
+      const scrGrad = pkCtx.createLinearGradient(150, 110, 150, 290);
+      scrGrad.addColorStop(0, '#1e1b4b');
+      scrGrad.addColorStop(1, '#090514');
+      pkCtx.fillStyle = scrGrad;
+      pkCtx.fillRect(152, 112, 236, 176);
+      pkCtx.restore();
+
+      // Screen Header
+      pkCtx.save();
+      pkCtx.fillStyle = '#f472b6';
+      pkCtx.font = 'bold 11px Outfit, sans-serif';
+      pkCtx.textAlign = 'center';
+      pkCtx.fillText('CR 777 FEVER パチンコ', 270, 130);
+
+      // 3 Digital Reels Display
+      const reelX = [190, 270, 350];
+      const reelY = 195;
+
+      for (let r = 0; r < 3; r++) {
+        // Reel Box
+        pkCtx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+        pkCtx.fillRect(reelX[r] - 32, reelY - 45, 64, 76);
+        pkCtx.strokeStyle = '#ec4899';
+        pkCtx.lineWidth = 1.5;
+        pkCtx.strokeRect(reelX[r] - 32, reelY - 45, 64, 76);
+
+        // Reel Text/Symbol
+        let sym = pachinkoReels[r];
+        if (pachinkoSlotState === 'SPINNING' && pachinkoReelSpeeds[r] > 0) {
+          sym = (Math.floor(pachinkoReelAngles[r] / 10) % 9) + 1;
+        } else if (pachinkoSlotState === 'REACH' && r === 1) {
+          sym = (Math.floor(pachinkoReelAngles[1] / 15) % 9) + 1;
+        }
+
+        pkCtx.font = '900 36px Outfit, sans-serif';
+        if (sym === 7) {
+          pkCtx.fillStyle = '#ef4444';
+          pkCtx.shadowColor = '#f59e0b';
+          pkCtx.shadowBlur = 15;
+        } else {
+          pkCtx.fillStyle = '#f8fafc';
+          pkCtx.shadowBlur = 0;
+        }
+        pkCtx.fillText(sym, reelX[r], reelY + 12);
+      }
+      pkCtx.restore();
+
+      // REACH or FEVER Banner on LCD
+      if (pachinkoSlotState === 'REACH') {
+        pkCtx.save();
+        pkCtx.fillStyle = '#ef4444';
+        pkCtx.font = '900 18px Pretendard, sans-serif';
+        pkCtx.textAlign = 'center';
+        pkCtx.shadowColor = '#fef08a';
+        pkCtx.shadowBlur = 12;
+        pkCtx.fillText('🔥 激熱 リーチ!! 🔥', 270, 252);
+        pkCtx.restore();
+      } else if (pachinkoSlotState === 'FEVER') {
+        pkCtx.save();
+        pkCtx.fillStyle = '#fbc02d';
+        pkCtx.font = '900 19px Pretendard, sans-serif';
+        pkCtx.textAlign = 'center';
+        pkCtx.shadowColor = '#ec4899';
+        pkCtx.shadowBlur = 20;
+        pkCtx.fillText('🎉 大当り!! 777 FEVER! 🎉', 270, 252);
+        pkCtx.restore();
+      } else {
+        pkCtx.save();
+        pkCtx.fillStyle = '#94a3b8';
+        pkCtx.font = '10px Pretendard, sans-serif';
+        pkCtx.textAlign = 'center';
+        pkCtx.fillText('START 입상구를 노려라!', 270, 252);
+        pkCtx.restore();
+      }
+
+      // Reservation Lamps (4 orbs under LCD)
+      pkCtx.save();
+      for (let i = 0; i < 4; i++) {
+        const ox = 225 + i * 30;
+        const oy = 274;
+        pkCtx.beginPath();
+        pkCtx.arc(ox, oy, 5, 0, Math.PI * 2);
+        if (i < pachinkoHoldCount) {
+          pkCtx.fillStyle = '#38bdf8';
+          pkCtx.shadowColor = '#38bdf8';
+          pkCtx.shadowBlur = 10;
+        } else {
+          pkCtx.fillStyle = '#334155';
+          pkCtx.shadowBlur = 0;
+        }
+        pkCtx.fill();
+      }
+      pkCtx.restore();
+
+      // 5. Start Chucker (스타트 입상구: x=270, y=350)
+      pkCtx.save();
+      pkCtx.shadowColor = '#38bdf8';
+      pkCtx.shadowBlur = 15;
+      pkCtx.fillStyle = '#0284c7';
+      pkCtx.beginPath();
+      pkCtx.roundRect(244, 338, 52, 24, 6);
+      pkCtx.fill();
+      pkCtx.strokeStyle = '#7dd3fc';
+      pkCtx.lineWidth = 2;
+      pkCtx.stroke();
+
+      pkCtx.fillStyle = '#fff';
+      pkCtx.font = 'bold 9px sans-serif';
+      pkCtx.textAlign = 'center';
+      pkCtx.fillText('START', 270, 353);
+      pkCtx.restore();
+
+      // 6. Tulips (좌/우 튤립)
+      // Left Tulip (95, 430)
+      pkCtx.save();
+      pkCtx.translate(pachinkoLeftTulip.x, pachinkoLeftTulip.y);
+      pkCtx.fillStyle = pachinkoLeftTulip.open ? '#ec4899' : '#a855f7';
+      pkCtx.beginPath();
+      pkCtx.arc(0, 0, 14, 0, Math.PI * 2);
+      pkCtx.fill();
+      pkCtx.fillStyle = '#fff';
+      pkCtx.font = 'bold 8px sans-serif';
+      pkCtx.textAlign = 'center';
+      pkCtx.fillText('OPEN', 0, 3);
+      pkCtx.restore();
+
+      // Right Tulip (445, 430)
+      pkCtx.save();
+      pkCtx.translate(pachinkoRightTulip.x, pachinkoRightTulip.y);
+      pkCtx.fillStyle = pachinkoRightTulip.open ? '#ec4899' : '#a855f7';
+      pkCtx.beginPath();
+      pkCtx.arc(0, 0, 14, 0, Math.PI * 2);
+      pkCtx.fill();
+      pkCtx.fillStyle = '#fff';
+      pkCtx.font = 'bold 8px sans-serif';
+      pkCtx.textAlign = 'center';
+      pkCtx.fillText('OPEN', 0, 3);
+      pkCtx.restore();
+
+      // 7. Bottom Big Attacker Gate (x: 200~340, y: 620~652)
+      pkCtx.save();
+      if (pachinkoAttackerOpen) {
+        pkCtx.shadowColor = '#ef4444';
+        pkCtx.shadowBlur = 20;
+        pkCtx.fillStyle = '#991b1b';
+        pkCtx.fillRect(195, 620, 150, 34);
+        pkCtx.strokeStyle = '#fef08a';
+        pkCtx.lineWidth = 2.5;
+        pkCtx.strokeRect(195, 620, 150, 34);
+
+        pkCtx.fillStyle = '#fef08a';
+        pkCtx.font = '900 13px Pretendard, sans-serif';
+        pkCtx.textAlign = 'center';
+        pkCtx.fillText('▼ 大当り ATTACKER OPEN ▼', 270, 642);
+      } else {
+        pkCtx.fillStyle = '#1e293b';
+        pkCtx.fillRect(205, 626, 130, 24);
+        pkCtx.strokeStyle = '#475569';
+        pkCtx.lineWidth = 1.5;
+        pkCtx.strokeRect(205, 626, 130, 24);
+
+        pkCtx.fillStyle = '#64748b';
+        pkCtx.font = 'bold 9px sans-serif';
+        pkCtx.textAlign = 'center';
+        pkCtx.fillText('ATTACKER (CLOSED)', 270, 641);
+      }
+      pkCtx.restore();
+
+      // 8. Pins (못, Nails)
+      for (let p of pachinkoPegs) {
+        pkCtx.save();
+        pkCtx.beginPath();
+        pkCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        if (p.flash > 0) {
+          pkCtx.fillStyle = '#fff';
+          pkCtx.shadowColor = '#facc15';
+          pkCtx.shadowBlur = 10;
+          p.flash -= 0.1;
+        } else {
+          pkCtx.fillStyle = p.color;
+        }
+        pkCtx.fill();
+        pkCtx.restore();
+      }
+
+      // 9. Steel Balls (은색 쇠구슬)
+      for (let b of pachinkoBalls) {
+        pkCtx.save();
+        const radGrad = pkCtx.createRadialGradient(b.x - 2, b.y - 2, 1, b.x, b.y, b.r);
+        radGrad.addColorStop(0, '#ffffff');
+        radGrad.addColorStop(0.4, '#e2e8f0');
+        radGrad.addColorStop(0.85, '#94a3b8');
+        radGrad.addColorStop(1, '#475569');
+
+        pkCtx.fillStyle = radGrad;
+        pkCtx.shadowColor = 'rgba(255, 255, 255, 0.4)';
+        pkCtx.shadowBlur = 4;
+        pkCtx.beginPath();
+        pkCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        pkCtx.fill();
+        pkCtx.restore();
+      }
+
+      // 10. Particles
+      for (let pt of pachinkoParticles) {
+        pkCtx.save();
+        pkCtx.fillStyle = pt.color;
+        pkCtx.globalAlpha = Math.max(0, pt.alpha);
+        pkCtx.beginPath();
+        pkCtx.arc(pt.x, pt.y, pt.r, 0, Math.PI * 2);
+        pkCtx.fill();
+        pkCtx.restore();
+      }
+    }
+
+    function pachinkoLoop() {
+      updatePachinkoPhysics();
+      drawPachinkoFrame();
+
+      const active = document.getElementById('tab-pachinko') && document.getElementById('tab-pachinko').classList.contains('active');
+      if (active && (pachinkoBalls.length > 0 || pachinkoSlotState !== 'IDLE' || pachinkoAutoFire || pachinkoParticles.length > 0)) {
+        pachinkoAnimationId = requestAnimationFrame(pachinkoLoop);
+      } else {
+        pachinkoRunning = false;
+      }
+    }
+
+    function copyPachinkoNumbers() {
+      if (latestPachinkoWinners.length < 6) {
+        alert("아직 6개의 골든 로또 번호가 추출되지 않았습니다!");
+        return;
+      }
+      const sStr = latestPachinkoWinners.map(n => String(n).padStart(2, '0')).join(', ');
+      const text = `🎰 [CR 777 FEVER 파칭코 대당첨 골든 6구]
+대박 번호: ${sStr}
+(도쿄 신주쿠 가부키초 럭키 홀 777 대박 기운 충전 완료!)
+https://onnebang.github.io/lotto-analyzer/`;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("카카오톡 공유용 파칭코 대박 번호가 복사되었습니다!");
+      });
+    }
+
+    function openPachinkoReceiptModal() {
+      const { rules, quote } = rollReceiptRules('pachinko');
+      currentPachinkoReceiptRules = rules;
+      currentPachinkoReceiptQuote = quote;
+
+      const container = document.getElementById('pachinkoReceiptRules');
+      if (container) {
+        container.innerHTML = rules.map((r, i) => `<div>${i + 1}. ${r}</div>`).join('');
+      }
+      const quoteEl = document.getElementById('pachinkoReceiptQuote');
+      if (quoteEl) quoteEl.textContent = quote;
+
+      if (latestPachinkoWinners.length === 6) {
+        const numEl = document.getElementById('pachinkoReceiptNumbers');
+        if (numEl) numEl.textContent = latestPachinkoWinners.map(n => String(n).padStart(2, '0')).join('  ');
+      }
+
+      const modal = document.getElementById('pachinkoReceiptModal');
+      if (modal) modal.classList.add('open');
+    }
+
+    function closePachinkoReceiptModal(e) {
+      const modal = document.getElementById('pachinkoReceiptModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function copyPachinkoReceiptText() {
+      if (latestPachinkoWinners.length < 6) return;
+      const dateStr = document.getElementById('pachinkoReceiptDate').textContent;
+      const numsStr = latestPachinkoWinners.map(n => String(n).padStart(2, '0')).join('  ');
+      const rulesStr = (currentPachinkoReceiptRules.length ? currentPachinkoReceiptRules : [
+        "뒷골목 TUC 교환소 아줌마한테 90도 폴더 인사 금지 (자연스럽게 금괴 수령)",
+        "엄마/아빠한테 '나 일본에서 777 피버 터뜨렸어' 자랑하고 전세금 쏴주기",
+        "언니/동생한테 '이제 네 방 월세는 내가 낸다' 쿨하게 플렉스하기",
+        "회사 단톡방에 '저 파칭코 프로 전향합니다' 사직서 짤 투척 금지"
+      ]).map((r, i) => `${i + 1}. ${r}`).join('\n');
+
+      const text = `========================================
+🎰 CR 777 FEVER パチンコ 大当り 景品交換証 🎰
+========================================
+[발행점] 도쿄 신주쿠 가부키초 럭키 파칭코 홀
+[기종명] CR 超絶爆笑 로또 6/45 FEVER 777
+[일자] ${dateStr}
+[상태] 大当り 確変 (대당첨 확변 잭팟 돌입!)
+[획득구수] 77,777개 (특수 금괴 경품 교환권)
+----------------------------------------
+[777 FEVER 황금 로또 6구]
+${numsStr}
+----------------------------------------
+[※ 파칭코 대박 후 TUC 경품교환소 필수 수칙]
+${rulesStr}
+----------------------------------------
+${currentPachinkoReceiptQuote}
+========================================`;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("파칭코 TUC 교환증 텍스트가 클립보드에 복사되었습니다!");
+      });
+    }
+
 
     // =========================================================
     // 🥊 45구 배틀로얄 물리 엔진 & 게임 루프 (CANVAS 2D)
@@ -4903,6 +6182,7 @@ ${currentBattleReceiptQuote}
       initBacktestPad();
       initPinball();
       initDerby();
+      initPachinkoBoard();
       initBattleBalls();
       generateNumbers();
     });
