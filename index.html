@@ -756,7 +756,97 @@
       transform: scale(1.05);
     }
 
-  </style>
+  
+    /* ========================================================= */
+    /* 📺 日本 爆笑 버라이어티 TV 예능풍 스타일 (JAPANESE VARIETY THEME) */
+    /* ========================================================= */
+    .variety-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.72rem;
+      color: #fff;
+      background: linear-gradient(135deg, #ef4444, #f59e0b);
+      border: 2px solid #fef08a;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      text-shadow: 1px 1px 0 #000;
+      letter-spacing: 0.5px;
+      transform: rotate(-1.5deg);
+      animation: variety-wobble 3s infinite ease-in-out;
+    }
+    @keyframes variety-wobble {
+      0%, 100% { transform: rotate(-1.5deg) scale(1); }
+      50% { transform: rotate(1.5deg) scale(1.05); }
+    }
+    .on-air-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+      font-weight: 800;
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+    }
+    .on-air-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 0 0 8px #ef4444;
+      animation: onair-pulse 1s infinite alternate;
+    }
+    @keyframes onair-pulse {
+      from { opacity: 0.3; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1.25); }
+    }
+    .variety-ticker {
+      background: linear-gradient(90deg, #991b1b, #7f1d1d 30%, #1e1b4b 100%);
+      border: 2px solid #f59e0b;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+      border-radius: 10px;
+      padding: 0.4rem 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.6rem;
+      overflow: hidden;
+    }
+    .variety-tag {
+      background: #ef4444;
+      color: #fff;
+      font-weight: 900;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      border: 1px solid #fef08a;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+      white-space: nowrap;
+      font-size: 0.72rem;
+      letter-spacing: 0.5px;
+    }
+    .variety-pachinko-teaser {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(99, 102, 241, 0.25));
+      border: 1px dashed rgba(236, 72, 153, 0.6);
+      border-radius: 10px;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.78rem;
+      color: #f472b6;
+      margin-top: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+</style>
 </head>
 <body>
 
@@ -764,12 +854,16 @@
   <header>
     <div class="header-inner">
       <div class="brand">
-        <div class="brand-icon">
-          <i class="fa-solid fa-dice-d20"></i>
+        <div class="brand-icon" style="background:linear-gradient(135deg, #f59e0b, #ef4444); box-shadow:0 0 20px rgba(245, 158, 11, 0.5);">
+          <i class="fa-solid fa-tv"></i>
         </div>
         <div>
-          <h1>로또 6/45 AI 통계 & 45구 배틀로얄</h1>
-          <p>역대 1,247회 전수 통계 & 최후의 생존 공 6개 서바이벌</p>
+          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+            <h1>로또 6/45 AI 버라이어티 쇼</h1>
+            <span class="on-air-badge"><span class="on-air-dot"></span> LIVE 生放送</span>
+            <span class="variety-badge">초특급 병맛 예능</span>
+          </div>
+          <p>역대 전회차 AI 빅데이터 분석 & 45구 아케이드 버라이어티</p>
         </div>
       </div>
       <div class="header-actions">
@@ -923,18 +1017,21 @@
     <div id="tab-derby" class="tab-content">
       <div class="battle-layout">
         <!-- Canvas Arena Box -->
-        <div class="arena-box" style="border-color: rgba(245, 158, 11, 0.4); box-shadow: 0 0 30px rgba(245, 158, 11, 0.2);">
-          <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-bottom:0.6rem; padding:0 0.5rem;">
+        <div class="arena-box" style="border-color: rgba(245, 158, 11, 0.5); box-shadow: 0 0 35px rgba(245, 158, 11, 0.25); background: rgba(20, 27, 45, 0.88);">
+          <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-bottom:0.5rem; padding:0 0.5rem;">
             <div style="font-size:0.95rem; font-weight:800; color:#f8fafc; display:flex; align-items:center; gap:0.4rem;">
-              <span style="color:#f59e0b;">● DERBY</span> 45구 로또 그랑프리 대상경주 (1,200m)
+              <span class="variety-tag">爆笑 DERBY</span> 45구 재팬 월드컵풍 병맛 경마 (1,200m)
             </div>
             <div style="font-size:0.85rem; color:#fbc02d;" id="derbyDistanceLabel">
-              남은 거리: <span id="derbyDistance" style="font-weight:800; font-family:'Outfit'; font-size:1.1rem; color:#fff;">1,200m</span>
+              남은 거리: <span id="derbyDistance" style="font-weight:800; font-family:'Outfit'; font-size:1.15rem; color:#fef08a; text-shadow:0 0 8px rgba(254,240,138,0.5);">1,200m</span>
             </div>
           </div>
-          <!-- Live Announcer Ticker -->
-          <div style="background:rgba(15, 23, 42, 0.85); border:1px solid rgba(245, 158, 11, 0.3); border-radius:8px; padding:0.45rem 0.8rem; font-size:0.82rem; color:#fef08a; margin-bottom:0.6rem; display:flex; align-items:center; gap:0.5rem;" id="derbyAnnouncerBar">
-            <i class="fa-solid fa-bullhorn" style="color:#f59e0b;"></i> <span id="derbyCommentaryText">45마리의 번호마들이 출발 게이트에 도열했습니다! '게이트 오픈!' 버튼을 누르면 일제히 질주합니다!</span>
+          <!-- Live Variety Ticker (일본 예능풍 자막바) -->
+          <div class="variety-ticker" id="derbyAnnouncerBar">
+            <span class="variety-tag" id="derbyTickerTag">速報</span>
+            <span id="derbyCommentaryText" style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+              45마리의 번호마들이 게이트에 도열! 무엇이 튀어나올지 모르는 초특급 병맛 그랑프리 출발 임박!
+            </span>
           </div>
           <canvas id="derbyCanvas" width="500" height="580" style="width:500px; height:580px; max-width:100%; border-radius:16px; background:#142918; border:2px solid rgba(245, 158, 11, 0.3); display:block;"></canvas>
         </div>
@@ -1636,6 +1733,71 @@
           g.connect(audioCtx.destination);
           o.start(now);
           o.stop(now + 0.04);
+        } else if (type === 'dodon') {
+          // 일본 예능 도동! 타악기 효과음 (Taiko Drum Boom)
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.type = 'sine';
+          o.frequency.setValueAtTime(90, now);
+          o.frequency.exponentialRampToValueAtTime(35, now + 0.28);
+          g.gain.setValueAtTime(0.35, now);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          o.start(now);
+          o.stop(now + 0.28);
+        } else if (type === 'vroom') {
+          // 슈퍼카 굉음 배기음 (Engine Rev)
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.type = 'sawtooth';
+          o.frequency.setValueAtTime(80, now);
+          o.frequency.exponentialRampToValueAtTime(320, now + 0.35);
+          g.gain.setValueAtTime(0.2, now);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          o.start(now);
+          o.stop(now + 0.35);
+        } else if (type === 'boing') {
+          // 만화 뿅/거대화 통통 튕김음
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.type = 'sine';
+          o.frequency.setValueAtTime(280, now);
+          o.frequency.exponentialRampToValueAtTime(650, now + 0.12);
+          g.gain.setValueAtTime(0.18, now);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          o.start(now);
+          o.stop(now + 0.12);
+        } else if (type === 'slip') {
+          // 바나나 껍질 미끄러짐 스핀음
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.type = 'triangle';
+          o.frequency.setValueAtTime(1400, now);
+          o.frequency.exponentialRampToValueAtTime(220, now + 0.18);
+          g.gain.setValueAtTime(0.18, now);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          o.start(now);
+          o.stop(now + 0.18);
+        } else if (type === 'rocket') {
+          // 로켓 분사 추진음
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.type = 'sawtooth';
+          o.frequency.setValueAtTime(200, now);
+          o.frequency.linearRampToValueAtTime(900, now + 0.4);
+          g.gain.setValueAtTime(0.22, now);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          o.start(now);
+          o.stop(now + 0.4);
         }
       } catch (e) {}
     }
@@ -2618,6 +2780,8 @@ ${currentPinballReceiptQuote}
 
     // =========================================================
     // 🏇 45구 로또 그랑프리 경마 물리 엔진 & 레이스 루프 (CANVAS 2D)
+    // 爆笑! 일본 재팬월드컵풍 초특급 병맛 기믹 탑재
+    // (슈퍼카 난입, 거대화 도핑, 아이스크림 먹방, 바나나 스핀, 로켓 부스터)
     // =========================================================
     const derbyCvs = document.getElementById('derbyCanvas');
     const derbyCtx = derbyCvs ? derbyCvs.getContext('2d') : null;
@@ -2630,9 +2794,14 @@ ${currentPinballReceiptQuote}
     let derbyHorses = [];
     let derbyFinishedHorses = [];
     let derbyParticles = [];
+    let derbyBananas = [];       // Track hazards: dropped banana peels
+    let derbyPopTexts = [];      // On-screen manga/variety sound effect texts
     let derbyCameraX = 0;
     let derbyCommentaryTimer = 0;
     let lastGallopSound = 0;
+
+    // Gags triggered schedule flags
+    let gagTriggered = { car: false, icecream: false, banana: false, giant: false, rocket: false };
 
     function initDerby() {
       if (!derbyCvs || !derbyCtx) return;
@@ -2644,10 +2813,13 @@ ${currentPinballReceiptQuote}
       derbyHorses = [];
       derbyFinishedHorses = [];
       derbyParticles = [];
+      derbyBananas = [];
+      derbyPopTexts = [];
       derbyCameraX = 0;
       derbyCommentaryTimer = 0;
+      gagTriggered = { car: false, icecream: false, banana: false, giant: false, rocket: false };
 
-      const strategies = ['front', 'pace', 'closer']; // 도주마, 선행마, 추입마
+      const strategies = ['front', 'pace', 'closer'];
       const laneH = (525 - 55) / 45;
 
       for (let i = 1; i <= 45; i++) {
@@ -2672,7 +2844,12 @@ ${currentPinballReceiptQuote}
           finished: false,
           finishRank: 0,
           inSpurt: false,
-          boostCooldown: 30 + Math.floor(Math.random() * 60)
+          boostCooldown: 30 + Math.floor(Math.random() * 60),
+          // Bizarre Gags State
+          gag: null,          // { type: 'car' | 'giant' | 'icecream' | 'spin' | 'rocket', timer: int, ... }
+          spinAngle: 0,
+          scale: 1.0,
+          isGiant: false
         });
       }
 
@@ -2697,7 +2874,9 @@ ${currentPinballReceiptQuote}
       if (banner) banner.style.display = 'none';
 
       const commentEl = document.getElementById('derbyCommentaryText');
-      if (commentEl) commentEl.innerHTML = "45마리의 번호마들이 출발 게이트에 도열했습니다! '게이트 오픈!' 버튼을 누르면 일제히 질주합니다!";
+      if (commentEl) commentEl.innerHTML = "45마리의 번호마들이 게이트에 도열! 무엇이 튀어나올지 모르는 초특급 병맛 그랑프리 출발 임박!";
+      const tagEl = document.getElementById('derbyTickerTag');
+      if (tagEl) tagEl.textContent = "待機";
 
       const btnStart = document.getElementById('btnStartDerby');
       if (btnStart) btnStart.innerHTML = '<i class="fa-solid fa-play"></i> 게이트 오픈! (출발)';
@@ -2710,12 +2889,17 @@ ${currentPinballReceiptQuote}
       if (derbyRunning) return;
 
       playSound('bugle');
+      playSound('dodon');
       derbyRunning = true;
       const btnStart = document.getElementById('btnStartDerby');
       if (btnStart) btnStart.innerHTML = '<i class="fa-solid fa-bolt"></i> 경주 진행 중!';
 
       const commentEl = document.getElementById('derbyCommentaryText');
-      if (commentEl) commentEl.innerHTML = "🎺 <strong>탕!</strong> 게이트 활짝 열렸습니다! 45마리의 번호마들 일제히 출발!";
+      if (commentEl) commentEl.innerHTML = "🎺 <strong>탕! ドドン!</strong> 게이트 활짝 열렸습니다! 45마리의 번호마들 일제히 출발!";
+      const tagEl = document.getElementById('derbyTickerTag');
+      if (tagEl) tagEl.textContent = "生中継";
+
+      spawnDerbyPopText('スタート! (START!)', 'ドドドド!', 120, 280, '#fef08a', 28);
 
       derbyAnimationId = requestAnimationFrame(derbyLoop);
     }
@@ -2743,10 +2927,8 @@ ${currentPinballReceiptQuote}
     function skipDerbyRace() {
       if (derbyFinishedHorses.length >= 6) return;
 
-      // Finish remaining slots from current leaders or remaining horses
       const finishedNums = new Set(derbyFinishedHorses.map(h => h.num));
       const pool = derbyHorses.filter(h => !finishedNums.has(h.num));
-      // Sort by progress x descending with slight random jitter
       pool.sort((a, b) => (b.x + (Math.random() - 0.5) * 200) - (a.x + (Math.random() - 0.5) * 200));
 
       while (derbyFinishedHorses.length < 6 && pool.length > 0) {
@@ -2763,48 +2945,181 @@ ${currentPinballReceiptQuote}
       drawDerbyFrame();
     }
 
+    function spawnDerbyPopText(text, sub, x, y, color, size) {
+      derbyPopTexts.push({
+        text,
+        sub: sub || '',
+        x: x || 250,
+        y: y || 260,
+        life: 75,
+        maxLife: 75,
+        color: color || '#fef08a',
+        size: size || 24
+      });
+    }
+
     function updateDerbyPhysics() {
       let leadX = 0;
+      const livingHorses = derbyHorses.filter(h => !h.finished);
 
+      // Find current leader & trailer
+      livingHorses.sort((a, b) => b.x - a.x);
+      const currentLeader = livingHorses[0] || derbyHorses[0];
+      const leadProgressM = (currentLeader.x / DERBY_TRACK_PX) * DERBY_TOTAL_DIST;
+      const remainM = Math.max(0, DERBY_TOTAL_DIST - leadProgressM);
+
+      // =========================================================
+      // 🎭 BIZARRE JAPANESE VARIETY GAG SCHEDULER (재팬월드컵 기믹)
+      // =========================================================
+      // 1. 🚗 Supercar Overtake at ~950m
+      if (!gagTriggered.car && remainM < 980 && remainM > 880 && livingHorses.length > 10) {
+        gagTriggered.car = true;
+        // Pick a trailer between rank 15 and 35
+        const candidate = livingHorses[Math.min(livingHorses.length - 1, 15 + Math.floor(Math.random() * 15))];
+        if (candidate) {
+          candidate.gag = { type: 'car', timer: 200 };
+          playSound('vroom');
+          spawnDerbyPopText('🚗 ブオーン! 슈퍼카 난입!', '비켜라 면허 땄다!!', candidate.x, candidate.baseY - 20, '#ef4444', 24);
+          const commentEl = document.getElementById('derbyCommentaryText');
+          if (commentEl) commentEl.innerHTML = `🚨 <strong>【긴급속보】 [공 ${candidate.num}]</strong>번마가 면허 취득 기념 스포츠카 타고 굉음 질주?!`;
+        }
+      }
+
+      // 2. 🍦 Leader Ice Cream Break at ~750m
+      if (!gagTriggered.icecream && remainM < 780 && remainM > 680 && currentLeader) {
+        gagTriggered.icecream = true;
+        currentLeader.gag = { type: 'icecream', timer: 140 };
+        playSound('boing');
+        spawnDerbyPopText('🍦 냠냠~ 아이스크림 먹방!', '더워서 좀 쉴게요 (草)', currentLeader.x, currentLeader.baseY - 25, '#38bdf8', 22);
+        const commentEl = document.getElementById('derbyCommentaryText');
+        if (commentEl) commentEl.innerHTML = `🍧 <strong>【경악】 [공 ${currentLeader.num}]</strong>번마 1등 달리다 말고 파라솔 펴고 아이스크림 먹방 실화냐?!`;
+      }
+
+      // 3. 🍌 Banana Peel Trap at ~580m
+      if (!gagTriggered.banana && remainM < 620 && remainM > 520 && livingHorses.length > 5) {
+        gagTriggered.banana = true;
+        // Drop banana from a middle horse
+        const dropper = livingHorses[2] || livingHorses[0];
+        derbyBananas.push({ x: dropper.x - 20, y: dropper.baseY, life: 300 });
+        spawnDerbyPopText('🍌 바나나 투척!', '마리오카트 발동!', dropper.x, dropper.baseY - 15, '#facc15', 20);
+      }
+
+      // 4. 🍄 Giant Mega Ball at ~420m
+      if (!gagTriggered.giant && remainM < 460 && remainM > 380 && livingHorses.length > 8) {
+        gagTriggered.giant = true;
+        const candidate = livingHorses[4 + Math.floor(Math.random() * 6)] || livingHorses[2];
+        if (candidate) {
+          candidate.gag = { type: 'giant', timer: 180 };
+          candidate.isGiant = true;
+          playSound('dodon');
+          playSound('boing');
+          spawnDerbyPopText('🍄 巨大化!! 메가 거대화!', '주변 공들 날려버리기!!', candidate.x, candidate.baseY - 30, '#ec4899', 26);
+          const commentEl = document.getElementById('derbyCommentaryText');
+          if (commentEl) commentEl.innerHTML = `💥 <strong>【대충격】 [공 ${candidate.num}]</strong>번마 거대화 물약 복용 의혹! 몸집 3배로 주변 공들 밀쳐내기!`;
+        }
+      }
+
+      // 5. 🚀 Rocket Delivery at ~250m
+      if (!gagTriggered.rocket && remainM < 280 && remainM > 180 && livingHorses.length > 5) {
+        gagTriggered.rocket = true;
+        const candidate = livingHorses[Math.min(livingHorses.length - 1, 3 + Math.floor(Math.random() * 5))];
+        if (candidate) {
+          candidate.gag = { type: 'rocket', timer: 160 };
+          playSound('rocket');
+          spawnDerbyPopText('🚀 ロケット発射! 로켓 배송!', '결승선으로 직행!!', candidate.x, candidate.baseY - 20, '#f97316', 24);
+          const commentEl = document.getElementById('derbyCommentaryText');
+          if (commentEl) commentEl.innerHTML = `🚀 <strong>【돌발】 [공 ${candidate.num}]</strong>번마 등 뒤에 로켓 부스터 점화! 결승선으로 총알 배송!`;
+        }
+      }
+
+      // =========================================================
+      // HORSE PHYSICS & GAG BEHAVIOR UPDATE
+      // =========================================================
       for (let h of derbyHorses) {
         if (h.finished) continue;
 
         // Gallop animation
         h.phase += 0.35 * derbySpeed;
 
-        // Dist remaining in meters (0 to 1200)
-        const progressM = (h.x / DERBY_TRACK_PX) * DERBY_TOTAL_DIST;
-        const remainM = Math.max(0, DERBY_TOTAL_DIST - progressM);
+        let speedMultiplier = 1.0;
 
         // Strategy pacing
-        let stratMultiplier = 1.0;
         if (h.strategy === 'front') {
-          // Front runner fast early, tires slightly late
-          stratMultiplier = remainM > 400 ? 1.12 : 0.95;
+          speedMultiplier = remainM > 400 ? 1.12 : 0.95;
         } else if (h.strategy === 'closer') {
-          // Closer saves stamina, explosive burst in final 350m
-          stratMultiplier = remainM > 350 ? 0.92 : 1.25;
+          speedMultiplier = remainM > 350 ? 0.92 : 1.25;
           if (remainM <= 350 && !h.inSpurt) {
             h.inSpurt = true;
             playSound('whip');
             spawnDerbyDust(h.x, h.baseY, '#f59e0b', 8);
           }
         } else {
-          // Pace balances evenly
-          stratMultiplier = 1.0 + (Math.random() - 0.5) * 0.15;
+          speedMultiplier = 1.0 + (Math.random() - 0.5) * 0.15;
         }
 
-        // Random turbo boost spurt
-        if (h.boostCooldown > 0) {
-          h.boostCooldown--;
-        } else if (Math.random() < 0.015) {
-          h.boostCooldown = 90;
-          h.vx += 1.8;
-          spawnDerbyDust(h.x, h.baseY, '#ef4444', 6);
+        // --- GAG BEHAVIOR ---
+        if (h.gag) {
+          h.gag.timer -= derbySpeed;
+
+          if (h.gag.type === 'car') {
+            // Supercar zooms forward at 2.8x speed!
+            speedMultiplier = 2.6;
+            if (Math.random() < 0.4) {
+              spawnDerbyDust(h.x - 18, h.baseY + 4, '#ef4444', 2);
+              spawnDerbyDust(h.x - 18, h.baseY - 2, '#f59e0b', 2);
+            }
+          } else if (h.gag.type === 'icecream') {
+            // Ice cream slacker slows down to 0.15x!
+            speedMultiplier = 0.12;
+          } else if (h.gag.type === 'giant') {
+            // Giant rolls with heavy momentum
+            speedMultiplier = 1.35;
+            h.scale = Math.min(2.6, h.scale + 0.08);
+
+            // Swat away nearby horses!
+            for (let other of derbyHorses) {
+              if (other !== h && !other.finished) {
+                if (Math.hypot(other.x - h.x, other.baseY - h.baseY) < 32) {
+                  other.x -= 12 * derbySpeed;
+                  spawnDerbyDust(other.x, other.baseY, '#fff', 2);
+                }
+              }
+            }
+          } else if (h.gag.type === 'spin') {
+            // Banana spinout
+            speedMultiplier = 0.2;
+            h.spinAngle += 0.45 * derbySpeed;
+          } else if (h.gag.type === 'rocket') {
+            // Rocket boost 2.4x speed
+            speedMultiplier = 2.4;
+            if (Math.random() < 0.5) {
+              spawnDerbyDust(h.x - 22, h.baseY, '#ea580c', 3);
+            }
+          }
+
+          if (h.gag.timer <= 0) {
+            if (h.gag.type === 'giant') {
+              h.isGiant = false;
+              h.scale = 1.0;
+            }
+            h.gag = null;
+            h.spinAngle = 0;
+          }
+        }
+
+        // Check banana collision
+        for (let b of derbyBananas) {
+          if (!h.gag && Math.hypot(h.x - b.x, h.baseY - b.y) < 16) {
+            h.gag = { type: 'spin', timer: 50 };
+            playSound('slip');
+            spawnDerbyPopText('🍌 ズサアア! 미끄덩!', '360도 스핀 회오리!', h.x, h.baseY - 20, '#facc15', 22);
+            b.life = 0; // consume banana
+            break;
+          }
         }
 
         // Apply speed
-        h.vx = h.baseSpeed * stratMultiplier + (Math.random() - 0.48) * 0.4;
+        h.vx = h.baseSpeed * speedMultiplier + (Math.random() - 0.48) * 0.4;
         h.x += h.vx * derbySpeed;
 
         if (h.x > leadX) leadX = h.x;
@@ -2855,6 +3170,19 @@ ${currentPinballReceiptQuote}
         updateDerbyCommentary(leadRemainM);
       }
 
+      // Bananas aging
+      for (let b of derbyBananas) {
+        b.life -= derbySpeed;
+      }
+      derbyBananas = derbyBananas.filter(b => b.life > 0);
+
+      // Pop texts aging
+      for (let pt of derbyPopTexts) {
+        pt.life -= derbySpeed;
+        pt.y -= 0.6 * derbySpeed;
+      }
+      derbyPopTexts = derbyPopTexts.filter(pt => pt.life > 0);
+
       // Particles
       for (let p of derbyParticles) {
         p.x += p.vx;
@@ -2877,21 +3205,20 @@ ${currentPinballReceiptQuote}
       const commentEl = document.getElementById('derbyCommentaryText');
       if (!commentEl) return;
 
-      // Get current leader horse
       const living = [...derbyHorses].sort((a, b) => b.x - a.x);
       const leader = living[0];
       const second = living[1];
 
       if (remainM > 900) {
-        commentEl.innerHTML = `🏇 <strong>[공 ${leader.num}]</strong>번마가 초반 페이스를 주도하며 선두로 치고 나옵니다!`;
+        commentEl.innerHTML = `🏇 <strong>[공 ${leader.num}]</strong>번마 '엄마 나 1등 해서 아파트 사줄게!' 외치며 초반 선두 질주!`;
       } else if (remainM > 600) {
-        commentEl.innerHTML = `⚡ <strong>[공 ${leader.num}]</strong>번마와 <strong>[공 ${second.num}]</strong>번마 치열한 1위 쟁탈전!`;
+        commentEl.innerHTML = `⚡ <strong>[공 ${leader.num}]</strong>번마와 <strong>[공 ${second.num}]</strong>번마 치열한 1위 쟁탈전! '오빠 차 뽑아준다!'`;
       } else if (remainM > 300) {
-        commentEl.innerHTML = `🔥 외곽에서 후미 그룹이 무서운 속도로 좁혀옵니다! 장내 환호성 폭발!`;
+        commentEl.innerHTML = `🔥 외곽에서 '할머니 황금 안마의자 간다!' 후미 그룹이 무서운 속도로 좁혀옵니다!`;
       } else if (remainM > 100) {
-        commentEl.innerHTML = `📢 <strong>라스트 직선주로!</strong> 모든 번호마들 채찍을 가하며 결승선을 향해 돌진합니다!`;
+        commentEl.innerHTML = `📢 <strong>라스트 직선주로!</strong> '대표님 사직서 대기!' 모든 번호마들 채찍을 가하며 결승선을 향해 돌진합니다!`;
       } else if (remainM > 0) {
-        commentEl.innerHTML = `🏁 <strong>결승선 바로 앞!</strong> 코차 승부! 과연 영광의 6두는 누구인가!`;
+        commentEl.innerHTML = `🏁 <strong>결승선 바로 앞!</strong> 코차 승부! 온 가족의 소고기 파티를 건 마지막 사투!`;
       }
     }
 
@@ -2900,15 +3227,16 @@ ${currentPinballReceiptQuote}
       if (derbyAnimationId) cancelAnimationFrame(derbyAnimationId);
 
       playSound('jackpot');
+      playSound('dodon');
       if (typeof confetti === 'function') {
         confetti({ particleCount: 160, spread: 85, origin: { y: 0.6 } });
       }
 
-      // Collect 6 winning horses & sort numbers ascending
+      spawnDerbyPopText('GOAL IN!!', '1~6착 확정! 爆笑!', DERBY_TRACK_PX - derbyCameraX + 160, 240, '#fef08a', 32);
+
       const top6 = derbyFinishedHorses.slice(0, 6);
       const sortedNums = top6.map(h => h.num).sort((a, b) => a - b);
 
-      // Show Winner Banner
       const banner = document.getElementById('derbyWinnerBanner');
       if (banner) banner.style.display = 'block';
 
@@ -2920,7 +3248,6 @@ ${currentPinballReceiptQuote}
         });
       }
 
-      // Fill Receipt Modal
       const now = new Date();
       const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
       const recDate = document.getElementById('derbyReceiptDate');
@@ -2933,6 +3260,9 @@ ${currentPinballReceiptQuote}
       if (commentEl) {
         commentEl.innerHTML = `🏆 <strong>골인 완료!</strong> 1착~6착 입상 6두: <span style="color:#fbc02d; font-weight:800;">${top6.map(h=>h.num).join(', ')}</span> (추천 조합: ${sortedNums.join(', ')})`;
       }
+
+      const tagEl = document.getElementById('derbyTickerTag');
+      if (tagEl) tagEl.textContent = "確定";
 
       const statusEl = document.getElementById('derbyStatusText');
       if (statusEl) statusEl.textContent = '6 / 6 통과 완료! 🎉';
@@ -2948,23 +3278,20 @@ ${currentPinballReceiptQuote}
       const h = derbyCvs.height;
 
       // 1. Lush Green Turf Track Background
-      ctx.fillStyle = '#1b4322';
+      ctx.fillStyle = '#163a1c';
       ctx.fillRect(0, 0, w, h);
 
       // Alternating turf mow strips
-      ctx.fillStyle = '#163a1c';
+      ctx.fillStyle = '#1b4322';
       for (let y = 50; y < 535; y += 22) {
         ctx.fillRect(0, y, w, 11);
       }
 
       // 2. Dirt Track rails (Top and bottom white railing)
       ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-      // Top Rail
       ctx.fillRect(0, 48, w, 4);
-      // Bottom Rail
       ctx.fillRect(0, 535, w, 4);
 
-      // Rail vertical posts
       for (let x = 0; x < w; x += 35) {
         ctx.fillRect(x, 44, 3, 10);
         ctx.fillRect(x, 533, 3, 10);
@@ -2987,7 +3314,6 @@ ${currentPinballReceiptQuote}
         const sx = m.dist - derbyCameraX + 160;
         if (sx >= -50 && sx <= w + 50) {
           if (m.dist === DERBY_TRACK_PX) {
-            // Checkered Finish line banner
             ctx.fillStyle = '#fff';
             ctx.fillRect(sx - 3, 48, 8, 490);
             ctx.fillStyle = '#000';
@@ -2995,13 +3321,11 @@ ${currentPinballReceiptQuote}
               ctx.fillRect(sx - 3, cy, 4, 8);
               ctx.fillRect(sx + 1, cy + 8, 4, 8);
             }
-            // Finish Flag Header
             ctx.fillStyle = '#f59e0b';
             ctx.font = 'bold 13px Outfit, sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText('FINISH LINE 🏁', sx, 40);
           } else {
-            // Distance marker pole
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
             ctx.lineWidth = 1.5;
             ctx.setLineDash([4, 4]);
@@ -3020,7 +3344,19 @@ ${currentPinballReceiptQuote}
       }
       ctx.restore();
 
-      // 4. Draw Particles (Hoof dust / Turbo flames)
+      // 4. Draw Bananas on Track
+      for (let b of derbyBananas) {
+        const bx = b.x - derbyCameraX + 160;
+        if (bx >= -20 && bx <= w + 20) {
+          ctx.save();
+          ctx.font = '16px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('🍌', bx, b.y + 4);
+          ctx.restore();
+        }
+      }
+
+      // 5. Draw Particles (Hoof dust / Turbo flames)
       for (let p of derbyParticles) {
         ctx.save();
         ctx.beginPath();
@@ -3032,9 +3368,8 @@ ${currentPinballReceiptQuote}
         ctx.restore();
       }
 
-      // 5. Draw 45 Horses & Lotto Balls
-      // Sort horses by Y so lower horses naturally overlap upper horses
-      const drawOrder = [...derbyHorses].sort((a, b) => a.baseY - b.baseY);
+      // 6. Draw 45 Horses & Lotto Balls (with Japanese Variety Gags!)
+      const drawOrder = [...derbyHorses].sort((a, b) => (a.baseY + (a.isGiant ? 50 : 0)) - (b.baseY + (b.isGiant ? 50 : 0)));
 
       for (let h of drawOrder) {
         const sx = h.x - derbyCameraX + 160;
@@ -3042,19 +3377,96 @@ ${currentPinballReceiptQuote}
         const sy = h.baseY + bob;
 
         ctx.save();
-        // Galloping legs silhouette under the ball
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
-        ctx.lineWidth = 1.5;
-        const legSwing = Math.cos(h.phase) * 3;
-        ctx.beginPath();
-        ctx.moveTo(sx - 3, sy + 7);
-        ctx.lineTo(sx - 5 - legSwing, sy + 13);
-        ctx.moveTo(sx + 3, sy + 7);
-        ctx.lineTo(sx + 5 + legSwing, sy + 13);
-        ctx.stroke();
+
+        // --- GAG RENDERING ---
+        if (h.gag && h.gag.type === 'car') {
+          // 🚗 Supercar Chassis Body
+          ctx.fillStyle = '#ef4444';
+          ctx.fillRect(sx - 14, sy - 7, 32, 14);
+          ctx.strokeStyle = '#fef08a';
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(sx - 14, sy - 7, 32, 14);
+
+          // Wheels
+          ctx.fillStyle = '#111';
+          ctx.beginPath();
+          ctx.arc(sx - 8, sy + 7, 3.5, 0, Math.PI * 2);
+          ctx.arc(sx + 10, sy + 7, 3.5, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Headlight Beam
+          ctx.fillStyle = 'rgba(254, 240, 138, 0.35)';
+          ctx.beginPath();
+          ctx.moveTo(sx + 18, sy);
+          ctx.lineTo(sx + 45, sy - 8);
+          ctx.lineTo(sx + 45, sy + 8);
+          ctx.fill();
+
+          // Speech Bubble
+          ctx.fillStyle = '#fef08a';
+          ctx.font = 'bold 9px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('🚗 부릉부릉!', sx, sy - 12);
+
+        } else if (h.gag && h.gag.type === 'icecream') {
+          // 🍦 Beach Parasol above head
+          ctx.fillStyle = '#ec4899';
+          ctx.beginPath();
+          ctx.arc(sx, sy - 18, 12, Math.PI, 0);
+          ctx.fill();
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.moveTo(sx, sy - 18);
+          ctx.lineTo(sx, sy - 7);
+          ctx.stroke();
+
+          // Ice cream icon & bubble
+          ctx.font = '12px sans-serif';
+          ctx.fillText('🍦', sx + 10, sy - 8);
+          ctx.fillStyle = '#38bdf8';
+          ctx.font = 'bold 9px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('더워서 휴식중~', sx, sy - 24);
+
+        } else if (h.gag && h.gag.type === 'spin') {
+          // 🍌 Spinout
+          ctx.translate(sx, sy);
+          ctx.rotate(h.spinAngle);
+          ctx.translate(-sx, -sy);
+          ctx.font = 'bold 9px sans-serif';
+          ctx.fillStyle = '#facc15';
+          ctx.fillText('🌀 미끄덩!!', sx, sy - 14);
+
+        } else if (h.gag && h.gag.type === 'rocket') {
+          // 🚀 Rocket thruster on back
+          ctx.fillStyle = '#94a3b8';
+          ctx.fillRect(sx - 18, sy - 6, 9, 12);
+          ctx.fillStyle = '#f97316';
+          ctx.beginPath();
+          ctx.moveTo(sx - 18, sy);
+          ctx.lineTo(sx - 30, sy - 5);
+          ctx.lineTo(sx - 30, sy + 5);
+          ctx.fill();
+          ctx.font = 'bold 9px sans-serif';
+          ctx.fillText('🚀 로켓배송!', sx, sy - 13);
+        }
+
+        // Standard Galloping legs silhouette under the ball (if not in car)
+        if (!h.gag || h.gag.type !== 'car') {
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+          ctx.lineWidth = 1.5;
+          const legSwing = Math.cos(h.phase) * 3;
+          ctx.beginPath();
+          ctx.moveTo(sx - 3, sy + 7);
+          ctx.lineTo(sx - 5 - legSwing, sy + 13);
+          ctx.moveTo(sx + 3, sy + 7);
+          ctx.lineTo(sx + 5 + legSwing, sy + 13);
+          ctx.stroke();
+        }
 
         // Turbo flame streak
-        if (h.inSpurt) {
+        if (h.inSpurt && (!h.gag || h.gag.type !== 'rocket')) {
           ctx.beginPath();
           ctx.moveTo(sx - 9, sy);
           ctx.lineTo(sx - 18, sy + (Math.random() - 0.5) * 4);
@@ -3063,34 +3475,46 @@ ${currentPinballReceiptQuote}
           ctx.stroke();
         }
 
+        // Ball Radius (Scales if Giant!)
+        const curR = h.isGiant ? 8.5 * (h.scale || 2.4) : 8.5;
+
         // Lotto Ball Body
         ctx.beginPath();
-        ctx.arc(sx, sy, 8.5, 0, Math.PI * 2);
+        ctx.arc(sx, sy, curR, 0, Math.PI * 2);
         ctx.fillStyle = h.color;
-        ctx.shadowColor = h.finished ? '#fbc02d' : 'rgba(0,0,0,0.5)';
-        ctx.shadowBlur = h.finished ? 10 : 4;
+        ctx.shadowColor = h.isGiant ? '#ec4899' : (h.finished ? '#fbc02d' : 'rgba(0,0,0,0.5)');
+        ctx.shadowBlur = h.isGiant ? 20 : (h.finished ? 10 : 4);
         ctx.fill();
 
         // 3D Specular Highlight
         ctx.beginPath();
-        ctx.arc(sx - 2.5, sy - 2.5, 3, 0, Math.PI * 2);
+        ctx.arc(sx - curR * 0.3, sy - curR * 0.3, curR * 0.35, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
         ctx.fill();
 
         // Jockey Cap Visor
-        ctx.beginPath();
-        ctx.arc(sx + 1, sy - 8, 4, 0, Math.PI);
-        ctx.fillStyle = '#ffffff';
-        ctx.fill();
+        if (!h.isGiant) {
+          ctx.beginPath();
+          ctx.arc(sx + 1, sy - 8, 4, 0, Math.PI);
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+        }
 
         // Ball Number
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 8px Outfit, sans-serif';
+        ctx.font = h.isGiant ? 'bold 15px Outfit, sans-serif' : 'bold 8px Outfit, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.shadowColor = '#000';
         ctx.shadowBlur = 2;
         ctx.fillText(h.num, sx, sy);
+
+        // Giant label
+        if (h.isGiant) {
+          ctx.fillStyle = '#ec4899';
+          ctx.font = 'bold 10px sans-serif';
+          ctx.fillText('🍄 MEGA!!', sx, sy - curR - 4);
+        }
 
         // Finish Rank Badge if finished
         if (h.finished && h.finishRank <= 6) {
@@ -3102,70 +3526,71 @@ ${currentPinballReceiptQuote}
         ctx.restore();
       }
 
-      // 6. Mini-map Radar Bar at Top (y = 8 to 22)
+      // 7. Draw Manga / Japanese Variety Pop Texts (ドドドド, ズサアア, 草)
+      for (let pt of derbyPopTexts) {
+        ctx.save();
+        const alpha = Math.min(1, pt.life / 20);
+        ctx.globalAlpha = alpha;
+        ctx.font = `900 ${pt.size}px Pretendard, Outfit, sans-serif`;
+        ctx.textAlign = 'center';
+
+        // Comic Double Outline
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = '#000000';
+        ctx.strokeText(pt.text, pt.x, pt.y);
+
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = '#ef4444';
+        ctx.strokeText(pt.text, pt.x, pt.y);
+
+        ctx.fillStyle = pt.color;
+        ctx.fillText(pt.text, pt.x, pt.y);
+
+        if (pt.sub) {
+          ctx.font = `800 ${Math.round(pt.size * 0.55)}px Pretendard, sans-serif`;
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = '#000';
+          ctx.strokeText(pt.sub, pt.x, pt.y + pt.size * 0.7);
+          ctx.fillStyle = '#ffffff';
+          ctx.fillText(pt.sub, pt.x, pt.y + pt.size * 0.7);
+        }
+
+        ctx.restore();
+      }
+
+      // 8. Mini-map Radar Bar at Top (y = 8 to 22)
       ctx.save();
       const mmX = 35;
       const mmY = 10;
       const mmW = w - 70;
       const mmH = 12;
 
-      // Minimap background
       ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
       ctx.fillRect(mmX, mmY, mmW, mmH);
       ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
       ctx.lineWidth = 1;
       ctx.strokeRect(mmX, mmY, mmW, mmH);
 
-      // Gate & Finish Flag on minimap
       ctx.fillStyle = '#94a3b8';
       ctx.font = '7px sans-serif';
       ctx.fillText('GATE', mmX + 2, mmY + 9);
       ctx.fillText('GOAL🏁', mmX + mmW - 28, mmY + 9);
 
-      // Horse blips on minimap
       for (let h of derbyHorses) {
         const ratio = Math.min(1, Math.max(0, h.x / DERBY_TRACK_PX));
         const bx = mmX + ratio * (mmW - 6);
         ctx.beginPath();
-        ctx.arc(bx + 3, mmY + mmH / 2, 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = h.color;
+        ctx.arc(bx + 3, mmY + mmH / 2, h.isGiant ? 4 : 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = h.isGiant ? '#ec4899' : h.color;
         ctx.fill();
       }
 
-      // Camera viewport indicator on minimap
       const camRatio = Math.min(1, Math.max(0, derbyCameraX / DERBY_TRACK_PX));
       const camW = (w / DERBY_TRACK_PX) * mmW;
       ctx.strokeStyle = '#fff';
       ctx.lineWidth = 1.2;
       ctx.strokeRect(mmX + camRatio * mmW, mmY, Math.max(12, camW), mmH);
       ctx.restore();
-    }
-
-    function spawnDerbyDust(x, y, color, count) {
-      for (let i = 0; i < count; i++) {
-        const ang = Math.PI + (Math.random() - 0.5) * 0.8;
-        const spd = 0.8 + Math.random() * 2;
-        derbyParticles.push({
-          x, y,
-          vx: Math.cos(ang) * spd,
-          vy: (Math.random() - 0.5) * 1.2,
-          color,
-          r: 1.5 + Math.random() * 2,
-          life: 1.0
-        });
-      }
-    }
-
-    function derbyLoop() {
-      if (!derbyRunning) return;
-      for (let step = 0; step < derbySpeed; step++) {
-        updateDerbyPhysics();
-      }
-      drawDerbyFrame();
-
-      if (derbyFinishedHorses.length < 6) {
-        derbyAnimationId = requestAnimationFrame(derbyLoop);
-      }
     }
 
     function copyDerbyNumbers() {
