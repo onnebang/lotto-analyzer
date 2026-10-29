@@ -4173,12 +4173,22 @@ ${currentDerbyReceiptQuote}
     let chaserTimeRemain = 25.0; // 25.0 seconds countdown
     let chaserBalls = [];
     let chaserBags = [];
+    let chaserTraps = [];       // Bananas, smoke clouds
     let chaserParticles = [];
     let chaserPopTexts = [];
     let latestChaserWinners = [];
+    let chaserFrameCount = 0;
 
     let currentChaserReceiptRules = [];
     let currentChaserReceiptQuote = '유재석 왈: "끝날 때까지 끝난 게 아니다! 이 가방은 너의 것이다!"';
+
+    // 4대 도심 대중교통 환승 허브
+    const chaserCityHubs = [
+      { id: 'subway', name: '1호선 시청역', icon: '🚇', x: 75, y: 75, color: '#3b82f6', exitAngle: 0.8 },
+      { id: 'taxi',   name: '모범택시 승강장', icon: '🚕', x: 465, y: 75, color: '#f59e0b', exitAngle: 2.3 },
+      { id: 'bike',   name: '따릉이 대여소', icon: '🚲', x: 75, y: 505, color: '#10b981', exitAngle: -0.8 },
+      { id: 'bus',    name: '광역 버스 환승센터', icon: '🚌', x: 465, y: 505, color: '#ef4444', exitAngle: -2.3 }
+    ];
 
     function initChaser() {
       if (!chaserCvs || !chaserCtx) return;
@@ -4192,22 +4202,33 @@ ${currentDerbyReceiptQuote}
       chaserTimeRemain = 25.0;
       chaserParticles = [];
       chaserPopTexts = [];
+      chaserTraps = [];
       latestChaserWinners = [];
+      chaserFrameCount = 0;
 
       const w = chaserCvs.width;
       const h = chaserCvs.height;
 
-      // 6 Golden Money Bags
+      // 6개의 30억 황금 돈가방: 도심 6대 거점에 균형 배치
       chaserBags = [
-        { id: 1, x: 120, y: 130, holderNum: null, bounce: 0 },
-        { id: 2, x: 420, y: 130, holderNum: null, bounce: 0 },
-        { id: 3, x: 270, y: 290, holderNum: null, bounce: 0 },
-        { id: 4, x: 130, y: 460, holderNum: null, bounce: 0 },
-        { id: 5, x: 410, y: 460, holderNum: null, bounce: 0 },
-        { id: 6, x: 270, y: 490, holderNum: null, bounce: 0 }
+        { id: 1, name: '1호', x: 105, y: 125, vx: 0, vy: 0, holderNum: null, bounce: 0, fumbleCooldown: 0 },
+        { id: 2, name: '2호', x: 435, y: 125, vx: 0, vy: 0, holderNum: null, bounce: 0, fumbleCooldown: 0 },
+        { id: 3, name: '3호', x: 270, y: 260, vx: 0, vy: 0, holderNum: null, bounce: 0, fumbleCooldown: 0 },
+        { id: 4, name: '4호', x: 105, y: 455, vx: 0, vy: 0, holderNum: null, bounce: 0, fumbleCooldown: 0 },
+        { id: 5, name: '5호', x: 435, y: 455, vx: 0, vy: 0, holderNum: null, bounce: 0, fumbleCooldown: 0 },
+        { id: 6, name: '6호', x: 270, y: 420, vx: 0, vy: 0, holderNum: null, bounce: 0, fumbleCooldown: 0 }
       ];
 
-      // 45 Ball Characters
+      // 45인 플레이어 공: 6개 조로 분산 배치하여 1명에게 몰리지 않도록 초기화
+      const sectorSpawnPoints = [
+        { x: 105, y: 125 }, // 1호 가방 구역 (북서)
+        { x: 435, y: 125 }, // 2호 가방 구역 (북동)
+        { x: 270, y: 260 }, // 3호 가방 구역 (중앙 공원)
+        { x: 105, y: 455 }, // 4호 가방 구역 (남서)
+        { x: 435, y: 455 }, // 5호 가방 구역 (남동)
+        { x: 270, y: 420 }  // 6호 가방 구역 (중앙 남부)
+      ];
+
       chaserBalls = [];
       for (let i = 1; i <= 45; i++) {
         let col = '#fbc02d';
@@ -4216,25 +4237,35 @@ ${currentDerbyReceiptQuote}
         else if (i > 30 && i <= 40) col = '#78909c';
         else if (i > 40) col = '#43a047';
 
-        // Spawn spread out around perimeter
-        const ang = (i / 45) * Math.PI * 2;
-        const dist = 180 + Math.random() * 60;
+        const squad = ((i - 1) % 6) + 1; // 1 ~ 6
+        const center = sectorSpawnPoints[squad - 1];
+        const spawnAngle = (i * 1.39) % (Math.PI * 2);
+        const spawnDist = 48 + ((i * 19) % 55);
+
         chaserBalls.push({
           num: i,
-          x: w / 2 + Math.cos(ang) * dist,
-          y: h / 2 + Math.sin(ang) * dist,
-          vx: (Math.random() - 0.5) * 2,
-          vy: (Math.random() - 0.5) * 2,
+          x: Math.max(30, Math.min(w - 30, center.x + Math.cos(spawnAngle) * spawnDist)),
+          y: Math.max(30, Math.min(h - 30, center.y + Math.sin(spawnAngle) * spawnDist)),
+          vx: (Math.random() - 0.5) * 1.6,
+          vy: (Math.random() - 0.5) * 1.6,
           r: 10.5,
           color: col,
-          speed: 2.6 + Math.random() * 0.8,
-          bagIndex: null, // index of bag held (0 to 5) or null
+          speed: 2.8 + (i % 5) * 0.16,
+          bagIndex: null, // 소유 중인 가방 인덱스 (0~5) 또는 null
+          squadBagId: squad, // 전담 타깃 가방 ID (1~6)
+          invulnerable: 0,  // 탈주 무적 시간 (초반/탈취 시 즉시 재탈취 방지)
+          boostTimer: 0,    // 쏜살 전력 질주 시간
+          stunTimer: 0,     // 바나나/태클 충격 스턴
           tackleCooldown: 0,
-          face: ['(>_<)', '(•̀ᴗ•́)', '(ง •̀_•́)ง', '(¬‿¬)'][i % 4]
+          bananaCooldown: 60 + (i % 6) * 35,
+          smokeCooldown: 120 + (i % 6) * 45,
+          transitCooldown: 0,
+          confusedTimer: 0,
+          face: ['(>_<)', '(•̀ᴗ•́)', '(ง •̀_•́)ง', '(¬‿¬)', '(⊙_⊙)', '(炎_炎)'][i % 6]
         });
       }
 
-      // Reset UI
+      // UI 초기화
       document.getElementById('chaserTimeText').textContent = '25.0초';
       document.getElementById('chaserHoldersText').textContent = '0 / 6 확보';
       for (let i = 0; i < 6; i++) {
@@ -4269,7 +4300,7 @@ ${currentDerbyReceiptQuote}
       const tagEl = document.getElementById('chaserTickerTag');
       if (tagEl) tagEl.textContent = "추격중";
 
-      spawnChaserPopText('추격전 스타트!', '돈가방을 차지하라!', 270, 290, '#fef08a', 26);
+      spawnChaserPopText('추격전 스타트!', '도심 6개 돈가방을 사수하라!', 270, 290, '#fef08a', 26);
       if (typeof setTvWipeReaction === 'function') setTvWipeReaction('🏃', '"추격전 스타트!! 45인 전력 질주 시작!!"');
 
       chaserAnimationId = requestAnimationFrame(chaserLoop);
@@ -4292,13 +4323,18 @@ ${currentDerbyReceiptQuote}
       const w = chaserCvs.width;
       const h = chaserCvs.height;
 
-      // Drop bags from holders and scatter
-      chaserBalls.forEach(b => { b.bagIndex = null; });
+      chaserBalls.forEach(b => {
+        b.bagIndex = null;
+        b.invulnerable = 0;
+        b.boostTimer = 0;
+      });
       chaserBags.forEach((bag, idx) => {
         bag.holderNum = null;
-        bag.x = 60 + Math.random() * (w - 120);
-        bag.y = 70 + Math.random() * (h - 140);
-        bag.bounce = 15;
+        bag.x = 65 + Math.random() * (w - 130);
+        bag.y = 75 + Math.random() * (h - 150);
+        bag.vx = (Math.random() - 0.5) * 4;
+        bag.vy = (Math.random() - 0.5) * 4;
+        bag.fumbleCooldown = 25;
       });
       playSound('whip');
       spawnChaserPopText('가방 긴급 셔플!', '판도가 완전히 뒤집힌다!', 270, 290, '#f59e0b', 24);
@@ -4313,7 +4349,6 @@ ${currentDerbyReceiptQuote}
     }
 
     function skipChaserGame() {
-      // Pick 6 random balls as final bag holders
       const nums = [];
       for (let i = 1; i <= 45; i++) nums.push(i);
       const chosen = shuffleArray(nums).slice(0, 6);
@@ -4378,6 +4413,7 @@ ${currentDerbyReceiptQuote}
       }
       const el = document.getElementById('chaserHoldersText');
       if (el) el.textContent = `${securedCount} / 6 확보`;
+      return securedCount;
     }
 
     function finishChaserGame() {
@@ -4389,16 +4425,30 @@ ${currentDerbyReceiptQuote}
         confetti({ particleCount: 160, spread: 85, origin: { y: 0.6 } });
       }
 
-      // Collect the 6 balls holding the bags
-      const holders = chaserBags.map(b => b.holderNum).filter(n => n !== null);
-      // If any unpicked, fill randomly
-      const available = [];
-      for (let i = 1; i <= 45; i++) if (!holders.includes(i)) available.push(i);
-      while (holders.length < 6 && available.length > 0) {
-        holders.push(available.pop());
+      // 최종 가방 소유자 판정 (버저비터 시점에 떨어진 가방은 가장 가까운 플레이어가 획득)
+      const winners = [];
+      for (let k = 0; k < 6; k++) {
+        const bg = chaserBags[k];
+        if (bg.holderNum !== null && !winners.includes(bg.holderNum)) {
+          winners.push(bg.holderNum);
+        } else {
+          let closest = null;
+          let minD = 9999;
+          for (let b of chaserBalls) {
+            if (!winners.includes(b.num)) {
+              const d = Math.hypot(b.x - bg.x, b.y - bg.y);
+              if (d < minD) { minD = d; closest = b; }
+            }
+          }
+          if (closest) {
+            winners.push(closest.num);
+            bg.holderNum = closest.num;
+          }
+        }
       }
 
-      latestChaserWinners = [...holders].sort((a, b) => a - b);
+      latestChaserWinners = [...winners].sort((a, b) => a - b);
+      updateChaserSlotsUI();
 
       const banner = document.getElementById('chaserWinnerBanner');
       const row = document.getElementById('chaserBallsRow');
@@ -4434,171 +4484,356 @@ ${currentDerbyReceiptQuote}
     }
 
     function updateChaserPhysics() {
+      chaserFrameCount++;
       const w = chaserCvs.width;
       const h = chaserCvs.height;
 
-      // Countdown
+      // 1. 카운트다운 타이머
       chaserTimeRemain = Math.max(0, chaserTimeRemain - (1 / 60) * chaserSpeed);
-      document.getElementById('chaserTimeText').textContent = chaserTimeRemain.toFixed(1) + '초';
+      const timerEl = document.getElementById('chaserTimeText');
+      if (timerEl) {
+        timerEl.textContent = chaserTimeRemain.toFixed(1) + '초';
+        if (chaserTimeRemain <= 5.0) {
+          timerEl.style.color = '#ef4444';
+          const tagEl = document.getElementById('chaserTickerTag');
+          if (tagEl) tagEl.textContent = '🚨 라스트 5초!';
+        } else {
+          timerEl.style.color = '#f59e0b';
+        }
+      }
 
       if (chaserTimeRemain <= 0) {
         finishChaserGame();
         return;
       }
 
-      // Update balls AI
+      // 2. 바닥에 떨어진 돈가방 감속 및 바운스 처리
+      for (let bag of chaserBags) {
+        if (bag.fumbleCooldown > 0) bag.fumbleCooldown -= chaserSpeed;
+        if (bag.holderNum === null) {
+          if (Math.abs(bag.vx) > 0.05) bag.vx *= 0.93; else bag.vx = 0;
+          if (Math.abs(bag.vy) > 0.05) bag.vy *= 0.93; else bag.vy = 0;
+          bag.x += bag.vx * chaserSpeed;
+          bag.y += bag.vy * chaserSpeed;
+          bag.x = Math.max(30, Math.min(w - 30, bag.x));
+          bag.y = Math.max(30, Math.min(h - 30, bag.y));
+        }
+      }
+
+      // 6개 가방의 소유자 맵 및 추격자 수 추적
+      const bagHolders = [null, null, null, null, null, null];
       for (let b of chaserBalls) {
-        if (b.tackleCooldown > 0) b.tackleCooldown -= chaserSpeed;
+        if (b.bagIndex !== null) bagHolders[b.bagIndex] = b;
+      }
+      const pursuerCounts = [0, 0, 0, 0, 0, 0];
 
-        if (b.bagIndex !== null) {
-          // ==========================================
-          // Ball HAS a bag: FLEE from nearest balls!
-          // ==========================================
-          let fleeX = 0;
-          let fleeY = 0;
-          for (let other of chaserBalls) {
-            if (other === b) continue;
-            const dx = b.x - other.x;
-            const dy = b.y - other.y;
-            const dist = Math.hypot(dx, dy);
-            if (dist < 80 && dist > 0) {
-              fleeX += (dx / dist) * (80 - dist);
-              fleeY += (dy / dist) * (80 - dist);
-            }
-          }
+      // 3. 가방을 소유한 탈주자(Runners) 물리 & AI 업데이트
+      for (let b of chaserBalls) {
+        if (b.bagIndex === null) continue;
 
-          // Steer gently away
-          const fleeMag = Math.hypot(fleeX, fleeY);
-          if (fleeMag > 0) {
-            b.vx += (fleeX / fleeMag) * 0.45;
-            b.vy += (fleeY / fleeMag) * 0.45;
-          }
+        if (b.invulnerable > 0) b.invulnerable -= chaserSpeed;
+        if (b.boostTimer > 0) b.boostTimer -= chaserSpeed;
+        if (b.stunTimer > 0) b.stunTimer -= chaserSpeed;
+        if (b.bananaCooldown > 0) b.bananaCooldown -= chaserSpeed;
+        if (b.smokeCooldown > 0) b.smokeCooldown -= chaserSpeed;
+        if (b.transitCooldown > 0) b.transitCooldown -= chaserSpeed;
 
-          // Speed limit (a bit slower because bag is heavy: 0.88x)
-          const currentSpd = Math.hypot(b.vx, b.vy);
-          const maxSpd = b.speed * 0.88;
-          if (currentSpd > maxSpd) {
-            b.vx = (b.vx / currentSpd) * maxSpd;
-            b.vy = (b.vy / currentSpd) * maxSpd;
-          }
+        const bag = chaserBags[b.bagIndex];
+        if (bag) {
+          bag.x = b.x;
+          bag.y = b.y - 14;
+        }
 
-          // Keep bag with ball
-          const bag = chaserBags[b.bagIndex];
-          if (bag) {
-            bag.x = b.x;
-            bag.y = b.y - 14;
-          }
-
-        } else {
-          // ==========================================
-          // Ball HAS NO bag: CHASE nearest target!
-          // Target either an unpicked bag OR a bag holder!
-          // ==========================================
-          let nearestTarget = null;
-          let minDist = 9999;
-
-          // Check unpicked bags first
-          for (let bag of chaserBags) {
-            if (bag.holderNum === null) {
-              const d = Math.hypot(bag.x - b.x, bag.y - b.y);
-              if (d < minDist) {
-                minDist = d;
-                nearestTarget = { x: bag.x, y: bag.y, bag, holderBall: null };
-              }
-            }
-          }
-
-          // If all bags held, target nearest bag holder
-          if (!nearestTarget) {
-            for (let other of chaserBalls) {
-              if (other.bagIndex !== null) {
-                const d = Math.hypot(other.x - b.x, other.y - b.y);
-                if (d < minDist) {
-                  minDist = d;
-                  nearestTarget = { x: other.x, y: other.y, bag: chaserBags[other.bagIndex], holderBall: other };
-                }
-              }
-            }
-          }
-
-          // Chase target
-          if (nearestTarget) {
-            const dx = nearestTarget.x - b.x;
-            const dy = nearestTarget.y - b.y;
-            const dist = Math.hypot(dx, dy);
-            if (dist > 0) {
-              b.vx += (dx / dist) * 0.55;
-              b.vy += (dy / dist) * 0.55;
-            }
-
-            // --- COLLISION / TACKLE ---
-            if (dist < 18) {
-              if (nearestTarget.holderBall) {
-                // TACKLE A HOLDER!
-                if (b.tackleCooldown <= 0) {
-                  b.tackleCooldown = 60;
-                  const victim = nearestTarget.holderBall;
-                  const bag = nearestTarget.bag;
-
-                  playSound('hit');
-                  spawnChaserParticles(b.x, b.y, '#f59e0b', 12);
-
-                  // 50% chance to steal bag, 50% chance to pop bag away
-                  if (Math.random() < 0.5) {
-                    // Snatched!
-                    victim.bagIndex = null;
-                    b.bagIndex = bag.id - 1;
-                    bag.holderNum = b.num;
-                    spawnChaserPopText('가방 강탈!!', `[공 ${b.num}] 기습 태클 성공!`, b.x, b.y - 25, '#ef4444', 22);
-                    if (typeof setTvWipeReaction === 'function') setTvWipeReaction('💥', `"[공 ${b.num}]번이 가방을 빼앗아 달아납니다!!"`);
-                  } else {
-                    // Popped away
-                    victim.bagIndex = null;
-                    bag.holderNum = null;
-                    bag.x += (Math.random() - 0.5) * 80;
-                    bag.y += (Math.random() - 0.5) * 80;
-                    spawnChaserPopText('가방 튕김!!', '공중으로 솟구친 가방!', b.x, b.y - 25, '#facc15', 22);
-                    if (typeof setTvWipeReaction === 'function') setTvWipeReaction('😲', `"몸싸움 폭발!! 가방이 바닥에 떨어졌다!!"`);
-                  }
-                  updateChaserSlotsUI();
-                }
-              } else {
-                // PICK UP UNPICKED BAG!
-                const bag = nearestTarget.bag;
-                if (bag && bag.holderNum === null) {
-                  b.bagIndex = bag.id - 1;
-                  bag.holderNum = b.num;
-                  playSound('slot');
-                  spawnChaserParticles(b.x, b.y, '#facc15', 10);
-                  spawnChaserPopText('가방 획득!', `[공 ${b.num}] 돈가방 확보!`, b.x, b.y - 25, '#10b981', 22);
-                  updateChaserSlotsUI();
-                  if (typeof setTvWipeReaction === 'function') setTvWipeReaction('💼', `"[공 ${b.num}]번이 돈가방을 챙겨 도망칩니다!!"`);
-                }
-              }
-            }
-          }
-
-          // Speed limit
-          const currentSpd = Math.hypot(b.vx, b.vy);
-          if (currentSpd > b.speed) {
-            b.vx = (b.vx / currentSpd) * b.speed;
-            b.vy = (b.vy / currentSpd) * b.speed;
+        // 주변 추격자들로부터 필사의 도주 벡터 계산
+        let fleeX = 0, fleeY = 0;
+        let nearChasers = 0;
+        for (let other of chaserBalls) {
+          if (other === b || other.bagIndex !== null) continue;
+          const dx = b.x - other.x;
+          const dy = b.y - other.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < 110 && dist > 0) {
+            nearChasers++;
+            const weight = (110 - dist) / dist;
+            fleeX += dx * weight;
+            fleeY += dy * weight;
           }
         }
 
-        // Apply movement
+        // 도심 경계선(벽) 탈출 유도: 구석에 갇히지 않도록 중앙 방향 밀어내기
+        const edgeMargin = 55;
+        if (b.x < edgeMargin) fleeX += (edgeMargin - b.x) * 2.2;
+        if (b.x > w - edgeMargin) fleeX -= (b.x - (w - edgeMargin)) * 2.2;
+        if (b.y < edgeMargin) fleeY += (edgeMargin - b.y) * 2.2;
+        if (b.y > h - edgeMargin) fleeY -= (b.y - (h - edgeMargin)) * 2.2;
+
+        const fleeMag = Math.hypot(fleeX, fleeY);
+        if (fleeMag > 0) {
+          b.vx += (fleeX / fleeMag) * 0.65;
+          b.vy += (fleeY / fleeMag) * 0.65;
+        }
+
+        // [병맛 기믹 A] 🍌 바나나 껍질 투척: 뒤쫓는 추격자가 2명 이상 근접 시 뒤쪽으로 살포
+        if (nearChasers >= 2 && b.bananaCooldown <= 0) {
+          const dropX = b.x - (b.vx ? b.vx / Math.hypot(b.vx, b.vy) : 0) * 16;
+          const dropY = b.y - (b.vy ? b.vy / Math.hypot(b.vx, b.vy) : 0) * 16;
+          chaserTraps.push({ type: 'banana', x: dropX, y: dropY, life: 360 });
+          b.bananaCooldown = 220 + Math.random() * 80;
+          spawnChaserPopText('🍌 바나나 투척!', `[공 ${b.num}] 추격조 슬립 유도!`, b.x, b.y - 25, '#facc15', 20);
+          playSound('hit');
+          const commentEl = document.getElementById('chaserCommentaryText');
+          if (commentEl) commentEl.innerHTML = `🍌 <strong>[공 ${b.num}번]</strong> 코너에서 바나나 투척! 뒤따르던 추격조 멘붕!`;
+        }
+
+        // [병맛 기믹 B] 💨 연막탄 살포: 3명 이상 밀착 시 연막을 피워 추격자들을 일시 혼란에 빠뜨림
+        if (nearChasers >= 3 && b.smokeCooldown <= 0) {
+          spawnChaserParticles(b.x, b.y, 'rgba(240, 240, 255, 0.8)', 16);
+          b.smokeCooldown = 300 + Math.random() * 100;
+          spawnChaserPopText('💨 연막탄 살포!', '도심 시야 전면 차단!', b.x, b.y - 25, '#e2e8f0', 20);
+          playSound('whip');
+          // 주변 추격자들에게 혼란 부여
+          for (let other of chaserBalls) {
+            if (other.bagIndex === null && Math.hypot(other.x - b.x, other.y - b.y) < 70) {
+              other.confusedTimer = 45;
+              other.vx = (Math.random() - 0.5) * 4;
+              other.vy = (Math.random() - 0.5) * 4;
+            }
+          }
+        }
+
+        // [병맛 기믹 C] 🚇🚕🚲🚌 도심 환승 허브 탈주: 거점 진입 시 급가속 탈주
+        if (b.transitCooldown <= 0) {
+          for (let hub of chaserCityHubs) {
+            if (Math.hypot(b.x - hub.x, b.y - hub.y) < 28) {
+              b.boostTimer = 75;
+              b.invulnerable = 90;
+              b.transitCooldown = 340;
+              const centerAngle = Math.atan2(h / 2 - b.y, w / 2 - b.x);
+              b.vx = Math.cos(centerAngle) * 5.4;
+              b.vy = Math.sin(centerAngle) * 5.4;
+              spawnChaserPopText(`${hub.icon} ${hub.name}!`, `[공 ${b.num}] 초고속 탈출!`, b.x, b.y - 30, hub.color, 22);
+              spawnChaserParticles(b.x, b.y, hub.color, 14);
+              playSound('whip');
+              if (typeof setTvWipeReaction === 'function') {
+                setTvWipeReaction(hub.icon, `"[공 ${b.num}번] ${hub.name}에서 대탈주 성공!!"`);
+              }
+              const commentEl = document.getElementById('chaserCommentaryText');
+              if (commentEl) commentEl.innerHTML = `${hub.icon} <strong>[공 ${b.num}번]</strong> ${hub.name} 탑승으로 추격조를 완전히 따돌립니다!`;
+              break;
+            }
+          }
+        }
+
+        // 속도 제한: 부스터 중일 때는 1.85배 질주, 일반 달리기 시에는 가방 무게로 0.95배
+        const currentSpd = Math.hypot(b.vx, b.vy);
+        const maxSpd = (b.boostTimer > 0) ? b.speed * 1.85 : b.speed * 0.95;
+        if (currentSpd > maxSpd) {
+          b.vx = (b.vx / currentSpd) * maxSpd;
+          b.vy = (b.vy / currentSpd) * maxSpd;
+        }
+
         b.x += b.vx * chaserSpeed;
         b.y += b.vy * chaserSpeed;
-
-        // Boundaries bounce
-        const margin = 20;
-        if (b.x < margin) { b.x = margin; b.vx *= -1; }
-        if (b.x > w - margin) { b.x = w - margin; b.vx *= -1; }
-        if (b.y < margin) { b.y = margin; b.vy *= -1; }
-        if (b.y > h - margin) { b.y = h - margin; b.vy *= -1; }
       }
 
-      // Update particles
+      // 4. 가방을 쫓는 추격자(Chasers) 물리 & AI 업데이트 (6명에게 균형 분산!)
+      for (let b of chaserBalls) {
+        if (b.bagIndex !== null) continue;
+
+        if (b.stunTimer > 0) {
+          b.stunTimer -= chaserSpeed;
+          continue; // 스턴 중에는 이동 불가
+        }
+        if (b.tackleCooldown > 0) b.tackleCooldown -= chaserSpeed;
+        if (b.confusedTimer > 0) b.confusedTimer -= chaserSpeed;
+
+        // 바나나 밟음 체크
+        for (let i = chaserTraps.length - 1; i >= 0; i--) {
+          const trap = chaserTraps[i];
+          if (trap.type === 'banana' && Math.hypot(b.x - trap.x, b.y - trap.y) < 14) {
+            b.stunTimer = 60;
+            chaserTraps.splice(i, 1);
+            spawnChaserPopText('🍌 꽈당!!', `[공 ${b.num}] 슬라이딩 몸개그!`, b.x, b.y - 25, '#facc15', 20);
+            playSound('hit');
+            spawnChaserParticles(b.x, b.y, '#facc15', 8);
+            if (typeof setTvWipeReaction === 'function') {
+              setTvWipeReaction('🍌', `"[공 ${b.num}번] 바나나 밟고 꽈당!! 몸개그 작렬!!"`);
+            }
+            break;
+          }
+        }
+        if (b.stunTimer > 0) continue;
+
+        // [균형 분산 추격 알고리즘]: 1명에게 몰리지 않도록 6개 가방에 추격자 분산 배정
+        let targetBagIdx = b.squadBagId - 1;
+        let bestDist = 9999;
+        for (let idx = 0; idx < 6; idx++) {
+          const bg = chaserBags[idx];
+          const targetPos = bg.holderNum !== null && bagHolders[idx] ? bagHolders[idx] : bg;
+          const d = Math.hypot(targetPos.x - b.x, targetPos.y - b.y);
+          if (idx === targetBagIdx) {
+            bestDist = d;
+          } else if (d < 95 && pursuerCounts[idx] < 6 && d < bestDist - 45) {
+            targetBagIdx = idx;
+            bestDist = d;
+          }
+        }
+        pursuerCounts[targetBagIdx]++;
+
+        const targetBag = chaserBags[targetBagIdx];
+        const targetHolder = targetBag.holderNum !== null ? bagHolders[targetBagIdx] : null;
+
+        let targetX = targetBag.x;
+        let targetY = targetBag.y;
+
+        // 길목 차단(Flanking) AI: 직진이 아닌 탈주자의 예상 경로를 차단하도록 예측
+        if (targetHolder) {
+          targetX = targetHolder.x + targetHolder.vx * 12;
+          targetY = targetHolder.y + targetHolder.vy * 12;
+        }
+
+        // 목표 지점을 향해 가속
+        const dx = targetX - b.x;
+        const dy = targetY - b.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist > 0) {
+          b.vx += (dx / dist) * 0.58;
+          b.vy += (dy / dist) * 0.58;
+        }
+
+        // 추격자 동료들 간 충돌 회피 (포위망 형성)
+        for (let other of chaserBalls) {
+          if (other === b || other.bagIndex !== null) continue;
+          const odx = b.x - other.x;
+          const ody = b.y - other.y;
+          const odist = Math.hypot(odx, ody);
+          if (odist < 22 && odist > 0) {
+            b.vx += (odx / odist) * 0.35;
+            b.vy += (ody / odist) * 0.35;
+          }
+        }
+
+        // [태클 및 가방 쟁탈 판정]
+        if (targetHolder) {
+          const directDist = Math.hypot(targetHolder.x - b.x, targetHolder.y - b.y);
+          if (directDist < 18) {
+            if (targetHolder.invulnerable <= 0 && b.tackleCooldown <= 0) {
+              b.tackleCooldown = 60;
+              playSound('hit');
+              spawnChaserParticles(b.x, b.y, '#f59e0b', 12);
+
+              if (Math.random() < 0.70) {
+                // 70% 확률: 직접 강탈 후 쏜살 탈주!
+                const prevNum = targetHolder.num;
+                targetHolder.bagIndex = null;
+                targetHolder.stunTimer = 32;
+
+                b.bagIndex = targetBag.id - 1;
+                targetBag.holderNum = b.num;
+                b.invulnerable = 90; // 1.5초 탈주 무적
+                b.boostTimer = 75;   // 1.25초 부스터
+
+                const escapeAngle = Math.atan2(b.y - targetHolder.y, b.x - targetHolder.x);
+                b.vx = Math.cos(escapeAngle) * 5.4;
+                b.vy = Math.sin(escapeAngle) * 5.4;
+
+                spawnChaserPopText('💥 기습 태클 성공!', `[공 ${b.num}] 가방 강탈 후 질주!`, b.x, b.y - 25, '#ef4444', 22);
+                if (typeof setTvWipeReaction === 'function') {
+                  setTvWipeReaction('💥', `"[공 ${b.num}번] 가방 탈취 성공!! 역전의 명수 등장!!"`);
+                }
+                const commentEl = document.getElementById('chaserCommentaryText');
+                if (commentEl) {
+                  commentEl.innerHTML = `💥 <strong>[공 ${b.num}번]</strong> 환상적인 슬라이딩 백태클! [공 ${prevNum}번]의 30억 돈가방을 빼앗아 달아납니다!`;
+                }
+              } else {
+                // 30% 확률: 격렬한 충돌로 가방 공중 튕김 (대혼전 발생)
+                targetHolder.bagIndex = null;
+                targetBag.holderNum = null;
+                targetBag.fumbleCooldown = 40;
+                const tossAngle = Math.random() * Math.PI * 2;
+                targetBag.vx = Math.cos(tossAngle) * 6.5;
+                targetBag.vy = Math.sin(tossAngle) * 6.5;
+
+                spawnChaserPopText('🏈 대혼란 가방 튕김!', '도심에 솟구친 30억!', b.x, b.y - 25, '#facc15', 22);
+                if (typeof setTvWipeReaction === 'function') {
+                  setTvWipeReaction('😲', `"몸싸움 폭발!! 가방이 바닥에 떨어졌다!!"`);
+                }
+                const commentEl = document.getElementById('chaserCommentaryText');
+                if (commentEl) {
+                  commentEl.innerHTML = `🏈 <strong>치열한 난투극!</strong> 가방이 공중으로 솟구쳐 튕겨 나갔습니다!!`;
+                }
+              }
+              updateChaserSlotsUI();
+            }
+          }
+        } else {
+          // 바닥에 떨어진 가방 획득
+          const bagDist = Math.hypot(targetBag.x - b.x, targetBag.y - b.y);
+          if (bagDist < 18 && targetBag.fumbleCooldown <= 0 && targetBag.holderNum === null) {
+            b.bagIndex = targetBag.id - 1;
+            targetBag.holderNum = b.num;
+            b.invulnerable = 85;
+            b.boostTimer = 70;
+            playSound('slot');
+            spawnChaserParticles(b.x, b.y, '#facc15', 12);
+            spawnChaserPopText('💼 가방 확보!', `[공 ${b.num}] 30억 쟁취!`, b.x, b.y - 25, '#10b981', 22);
+
+            const outAngle = Math.random() * Math.PI * 2;
+            b.vx = Math.cos(outAngle) * 4.8;
+            b.vy = Math.sin(outAngle) * 4.8;
+
+            updateChaserSlotsUI();
+            if (typeof setTvWipeReaction === 'function') {
+              setTvWipeReaction('💼', `"[공 ${b.num}번] 돈가방을 낚아채 전력 질주합니다!!"`);
+            }
+          }
+        }
+
+        // 속도 제한
+        const currentSpd = Math.hypot(b.vx, b.vy);
+        if (currentSpd > b.speed) {
+          b.vx = (b.vx / currentSpd) * b.speed;
+          b.vy = (b.vy / currentSpd) * b.speed;
+        }
+
+        b.x += b.vx * chaserSpeed;
+        b.y += b.vy * chaserSpeed;
+      }
+
+      // 5. 공-공 상호 충돌 반발력 (물리적 겹침 방지 - 45개 공이 1개 점으로 뭉치는 현상 원천 차단)
+      for (let i = 0; i < chaserBalls.length; i++) {
+        for (let j = i + 1; j < chaserBalls.length; j++) {
+          const b1 = chaserBalls[i];
+          const b2 = chaserBalls[j];
+          const cdx = b1.x - b2.x;
+          const cdy = b1.y - b2.y;
+          const cdist = Math.hypot(cdx, cdy);
+          if (cdist < 19 && cdist > 0) {
+            const overlap = (19 - cdist) * 0.45;
+            b1.x += (cdx / cdist) * overlap;
+            b1.y += (cdy / cdist) * overlap;
+            b2.x -= (cdx / cdist) * overlap;
+            b2.y -= (cdy / cdist) * overlap;
+          }
+        }
+      }
+
+      // 6. 도심 맵 외곽 바운스
+      const margin = 20;
+      for (let b of chaserBalls) {
+        if (b.x < margin) { b.x = margin; b.vx *= -0.7; }
+        if (b.x > w - margin) { b.x = w - margin; b.vx *= -0.7; }
+        if (b.y < margin) { b.y = margin; b.vy *= -0.7; }
+        if (b.y > h - margin) { b.y = h - margin; b.vy *= -0.7; }
+      }
+
+      // 7. 트랩 수명 관리
+      for (let i = chaserTraps.length - 1; i >= 0; i--) {
+        chaserTraps[i].life -= chaserSpeed;
+        if (chaserTraps[i].life <= 0) chaserTraps.splice(i, 1);
+      }
+
+      // 8. 파티클 수명 관리
       for (let i = chaserParticles.length - 1; i >= 0; i--) {
         const pt = chaserParticles[i];
         pt.x += pt.vx;
@@ -4608,7 +4843,7 @@ ${currentDerbyReceiptQuote}
         if (pt.life <= 0) chaserParticles.splice(i, 1);
       }
 
-      // Update pop texts
+      // 9. 팝업 텍스트 수명 관리
       for (let i = chaserPopTexts.length - 1; i >= 0; i--) {
         const pt = chaserPopTexts[i];
         pt.life -= chaserSpeed;
@@ -4624,96 +4859,164 @@ ${currentDerbyReceiptQuote}
 
       chaserCtx.clearRect(0, 0, w, h);
 
-      // 1. City Map Background (Asphalt & Park Zones)
-      chaserCtx.fillStyle = '#1e293b';
+      // 1. 도심 아스팔트 배경 & 도로망
+      chaserCtx.fillStyle = '#0f172a';
       chaserCtx.fillRect(0, 0, w, h);
 
-      // Central Park Green Zone (Circle in center)
-      chaserCtx.fillStyle = 'rgba(16, 185, 129, 0.18)';
+      // 메인 도로 (십자 및 순환로)
+      chaserCtx.fillStyle = '#1e293b';
+      chaserCtx.fillRect(0, h / 2 - 35, w, 70); // 가로 대로
+      chaserCtx.fillRect(w / 2 - 35, 0, 70, h); // 세로 대로
+
+      // 횡단보도 (지브라 스트라이프)
+      chaserCtx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+      for (let y = h / 2 - 30; y < h / 2 + 30; y += 10) {
+        chaserCtx.fillRect(w / 2 - 70, y, 20, 5);
+        chaserCtx.fillRect(w / 2 + 50, y, 20, 5);
+      }
+
+      // 도로 중앙 점선
+      chaserCtx.save();
+      chaserCtx.strokeStyle = 'rgba(250, 204, 21, 0.3)';
+      chaserCtx.lineWidth = 2.5;
+      chaserCtx.setLineDash([12, 12]);
       chaserCtx.beginPath();
-      chaserCtx.arc(w / 2, h / 2, 120, 0, Math.PI * 2);
+      chaserCtx.moveTo(0, h / 2); chaserCtx.lineTo(w, h / 2);
+      chaserCtx.moveTo(w / 2, 0); chaserCtx.lineTo(w / 2, h);
+      chaserCtx.stroke();
+      chaserCtx.restore();
+
+      // 2. 중앙 여의도 공원 & 분수대
+      chaserCtx.save();
+      chaserCtx.fillStyle = 'rgba(16, 185, 129, 0.16)';
+      chaserCtx.beginPath();
+      chaserCtx.arc(w / 2, h / 2, 110, 0, Math.PI * 2);
       chaserCtx.fill();
       chaserCtx.strokeStyle = 'rgba(16, 185, 129, 0.35)';
       chaserCtx.lineWidth = 2;
       chaserCtx.stroke();
 
-      // Park Fountain Center
-      chaserCtx.fillStyle = 'rgba(56, 189, 248, 0.25)';
+      // 분수대
+      const pulseFountain = 32 + Math.sin(chaserFrameCount * 0.08) * 3;
+      chaserCtx.fillStyle = 'rgba(56, 189, 248, 0.35)';
       chaserCtx.beginPath();
-      chaserCtx.arc(w / 2, h / 2, 35, 0, Math.PI * 2);
+      chaserCtx.arc(w / 2, h / 2, pulseFountain, 0, Math.PI * 2);
       chaserCtx.fill();
-
-      // Road Crosswalks / Dashed lines
-      chaserCtx.save();
-      chaserCtx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-      chaserCtx.lineWidth = 3;
-      chaserCtx.setLineDash([12, 12]);
-      chaserCtx.beginPath();
-      chaserCtx.moveTo(0, h / 2);
-      chaserCtx.lineTo(w, h / 2);
-      chaserCtx.moveTo(w / 2, 0);
-      chaserCtx.lineTo(w / 2, h);
+      chaserCtx.strokeStyle = 'rgba(56, 189, 248, 0.6)';
       chaserCtx.stroke();
+      chaserCtx.font = '14px sans-serif';
+      chaserCtx.textAlign = 'center';
+      chaserCtx.textBaseline = 'middle';
+      chaserCtx.fillText('⛲', w / 2, h / 2);
       chaserCtx.restore();
 
-      // 2. Unpicked Money Bags
-      for (let bag of chaserBags) {
-        if (bag.holderNum === null) {
-          chaserCtx.save();
-          // Golden aura glow
-          chaserCtx.shadowColor = '#f59e0b';
-          chaserCtx.shadowBlur = 15;
-          chaserCtx.font = '24px sans-serif';
-          chaserCtx.textAlign = 'center';
-          chaserCtx.fillText('💼', bag.x, bag.y + 8);
+      // 3. 도심 4대 환승 거점 (서브웨이, 택시, 따릉이, 버스)
+      for (let hub of chaserCityHubs) {
+        chaserCtx.save();
+        chaserCtx.fillStyle = `${hub.color}22`;
+        chaserCtx.strokeStyle = `${hub.color}88`;
+        chaserCtx.lineWidth = 2;
+        chaserCtx.beginPath();
+        chaserCtx.arc(hub.x, hub.y, 28, 0, Math.PI * 2);
+        chaserCtx.fill();
+        chaserCtx.stroke();
 
-          chaserCtx.fillStyle = '#fef08a';
-          chaserCtx.font = 'bold 10px Outfit, sans-serif';
-          chaserCtx.fillText(`${bag.id}호`, bag.x, bag.y + 22);
+        chaserCtx.font = '18px sans-serif';
+        chaserCtx.textAlign = 'center';
+        chaserCtx.textBaseline = 'middle';
+        chaserCtx.fillText(hub.icon, hub.x, hub.y - 2);
+
+        chaserCtx.fillStyle = '#ffffff';
+        chaserCtx.font = 'bold 9px Pretendard, sans-serif';
+        chaserCtx.fillText(hub.name, hub.x, hub.y + 20);
+        chaserCtx.restore();
+      }
+
+      // 4. 바닥 트랩 (바나나 껍질)
+      for (let trap of chaserTraps) {
+        if (trap.type === 'banana') {
+          chaserCtx.save();
+          chaserCtx.font = '16px sans-serif';
+          chaserCtx.textAlign = 'center';
+          chaserCtx.textBaseline = 'middle';
+          chaserCtx.fillText('🍌', trap.x, trap.y);
           chaserCtx.restore();
         }
       }
 
-      // 3. Balls
+      // 5. 바닥에 놓인 황금 돈가방 (007 가방)
+      for (let bag of chaserBags) {
+        if (bag.holderNum === null) {
+          chaserCtx.save();
+          chaserCtx.shadowColor = '#f59e0b';
+          chaserCtx.shadowBlur = 16;
+          chaserCtx.font = '22px sans-serif';
+          chaserCtx.textAlign = 'center';
+          chaserCtx.textBaseline = 'middle';
+          chaserCtx.fillText('💼', bag.x, bag.y);
+
+          chaserCtx.fillStyle = '#fef08a';
+          chaserCtx.font = '900 10px Outfit, sans-serif';
+          chaserCtx.fillText(`${bag.name}`, bag.x, bag.y + 16);
+          chaserCtx.restore();
+        }
+      }
+
+      // 6. 45인 플레이어 공
       for (let b of chaserBalls) {
         chaserCtx.save();
 
-        // If holding a bag, draw golden pulsing aura
+        // [소유자 효과]: 가방 소유자는 황금 아우라 + 가방 이모지 + 질주 효과
         if (b.bagIndex !== null) {
-          chaserCtx.strokeStyle = '#f59e0b';
+          const auraPulse = b.invulnerable > 0 ? (b.r + 6 + Math.sin(chaserFrameCount * 0.2) * 3) : (b.r + 4);
+          chaserCtx.strokeStyle = b.invulnerable > 0 ? '#38bdf8' : '#f59e0b';
           chaserCtx.lineWidth = 3;
-          chaserCtx.shadowColor = '#f59e0b';
-          chaserCtx.shadowBlur = 12;
+          chaserCtx.shadowColor = b.invulnerable > 0 ? '#38bdf8' : '#f59e0b';
+          chaserCtx.shadowBlur = 14;
           chaserCtx.beginPath();
-          chaserCtx.arc(b.x, b.y, b.r + 4, 0, Math.PI * 2);
+          chaserCtx.arc(b.x, b.y, auraPulse, 0, Math.PI * 2);
           chaserCtx.stroke();
 
-          // Floating bag above head
-          chaserCtx.font = '16px sans-serif';
+          // 머리 위 007 돈가방
+          chaserCtx.font = '18px sans-serif';
           chaserCtx.textAlign = 'center';
-          chaserCtx.fillText('💼', b.x, b.y - 15);
+          chaserCtx.fillText('💼', b.x, b.y - 16);
+
+          // 부스터 질주 시 쏜살 바람선
+          if (b.boostTimer > 0) {
+            chaserCtx.fillStyle = 'rgba(250, 204, 21, 0.4)';
+            chaserCtx.beginPath();
+            chaserCtx.arc(b.x - b.vx * 2, b.y - b.vy * 2, b.r * 0.7, 0, Math.PI * 2);
+            chaserCtx.fill();
+          }
         }
 
-        // Ball Body
+        // 공 본체
         chaserCtx.beginPath();
         chaserCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
         chaserCtx.fillStyle = b.color;
         chaserCtx.fill();
         chaserCtx.strokeStyle = '#ffffff';
-        chaserCtx.lineWidth = 1.2;
+        chaserCtx.lineWidth = 1.3;
         chaserCtx.stroke();
 
-        // Ball Number
+        // 번호 텍스트
         chaserCtx.fillStyle = '#ffffff';
         chaserCtx.font = 'bold 9px Outfit, sans-serif';
         chaserCtx.textAlign = 'center';
         chaserCtx.textBaseline = 'middle';
         chaserCtx.fillText(b.num, b.x, b.y);
 
+        // 스턴 상태: 머리 위 별 빙글빙글
+        if (b.stunTimer > 0) {
+          chaserCtx.font = '12px sans-serif';
+          chaserCtx.fillText('💫', b.x, b.y - 12);
+        }
+
         chaserCtx.restore();
       }
 
-      // 4. Particles
+      // 7. 파티클
       for (let pt of chaserParticles) {
         chaserCtx.save();
         chaserCtx.fillStyle = pt.color;
@@ -4724,7 +5027,7 @@ ${currentDerbyReceiptQuote}
         chaserCtx.restore();
       }
 
-      // 5. Pop texts
+      // 8. 한국 예능 자막 테롭 팝업 (2중 스트로크)
       for (let pt of chaserPopTexts) {
         chaserCtx.save();
         const alpha = Math.min(1, pt.life / 20);
@@ -4732,21 +5035,22 @@ ${currentDerbyReceiptQuote}
         chaserCtx.font = `900 ${pt.size}px Pretendard, Outfit, sans-serif`;
         chaserCtx.textAlign = 'center';
 
-        // White border
+        // 검정 외곽선
         chaserCtx.lineWidth = 4;
         chaserCtx.strokeStyle = '#000000';
         chaserCtx.strokeText(pt.text, pt.x, pt.y);
 
+        // 채우기
         chaserCtx.fillStyle = pt.color;
         chaserCtx.fillText(pt.text, pt.x, pt.y);
 
         if (pt.sub) {
-          chaserCtx.font = `800 ${Math.round(pt.size * 0.6)}px Pretendard, sans-serif`;
+          chaserCtx.font = `800 ${Math.round(pt.size * 0.62)}px Pretendard, sans-serif`;
           chaserCtx.lineWidth = 3;
           chaserCtx.strokeStyle = '#000000';
-          chaserCtx.strokeText(pt.sub, pt.x, pt.y + pt.size * 0.7);
+          chaserCtx.strokeText(pt.sub, pt.x, pt.y + pt.size * 0.72);
           chaserCtx.fillStyle = '#ffffff';
-          chaserCtx.fillText(pt.sub, pt.x, pt.y + pt.size * 0.7);
+          chaserCtx.fillText(pt.sub, pt.x, pt.y + pt.size * 0.72);
         }
         chaserCtx.restore();
       }
